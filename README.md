@@ -2,10 +2,64 @@ GarantiVp
 =========
 
 Garanti Bankası Sanal Pos İstemcisi .Net Framework üzerinde C# kullanılarak geliştirilmştir. Garanti Bankasının yeni 
-sanal pos sistemine göre düzenlenmiştir. 
+sanal pos sistemine göre düzenlenmiştir. OOS_PAY ödeme tipi için düzenlenmiştir.
 
-OOS_PAY ödeme tipi için düzenlenmiştir.
+Oğuzhan<br/>
+oguzhan.info<br/>
+aspsrc@gmail.com
 
+Kullanım
+=========
+
+Satış:
+```C#
+            var _pay = new Client()
+                         .Test().Company(terminalId, merchandId, "PROVAUT", Password)
+                                            .Customer("apsrc@gmail.com", "192.168.0.1")
+                                            .CreditCard("1145213658974525", "555", 5, 2015)
+                                            .Order(Guid.NewGuid().ToString("N"))
+                                            .Amount(100, CurrencyCode.TRL)
+                                            .Sales();
+
+            Assert.AreEqual("00", _pay.Transaction.Response.Code);
+            Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
+        }
+```
+
+Taksitli Satış:
+```C#
+            var _pay = new Client().Test()
+                            .Company(terminalId, merchandId, "PROVAUT", Password)
+                                .Customer("apsrc@gmail.com", "192.168.0.1")
+                                .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
+                                .Order(Guid.NewGuid().ToString("N"))
+                                .Amount(95)
+                                .Installment(2)
+                                .Sales();
+                                
+```
+
+İptal:
+```C#
+            var _pay = new Client()
+                                    .Test()
+                                    .Company(terminalId, merchandId, "PROVRFN", Password)
+                                    .Customer("apsrc@gmail.com", "192.168.0.1")
+                                    .Order(orderId)
+                                    .Amount(95)
+                                    .Cancel("405014619754");
+```
+
+İade:
+```C#
+            var _pay = new Client()
+                                    .Test()
+                                    .Company(terminalId, merchandId, "PROVAUT", Password)
+                                    .Customer("apsrc@gmail.com", "192.168.0.1")
+                                    .Order("405014619754")
+                                    .Amount(95)
+                                    .Refund();
+```
 
 Fonksiyonlar
 =========
