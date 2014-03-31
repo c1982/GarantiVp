@@ -132,7 +132,6 @@
             Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
         }
 
-
         [TestMethod]
         public void CancelTest()
         {
