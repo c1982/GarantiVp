@@ -8,9 +8,9 @@
     [TestClass]
     public class VPTests
     {
-        private readonly string terminalId = "30691297";
-        private readonly string merchandId = "7000679";
-        private readonly string Password = "123qweASD";
+        private readonly string terminalId = "30691000";
+        private readonly string merchandId = "7000000";
+        private readonly string Password = "021qweŞLA";
 
         private readonly string orderId = "cc5f63d899e64f39b996b1e9156a270e";
         private readonly string OrderRefNumber = "000014610000";
