@@ -40,10 +40,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="GVPSAddressTypeEnum.cs" />
     <Compile Include="GVPSRequest.cs" />
+    <Compile Include="GVPSRequestCardholderPresentCodeEnum.cs" />
+    <Compile Include="GVPSRequestModeEnum.cs" />
+    <Compile Include="GVPSRequestOrderAddressList.cs" />
+    <Compile Include="GVPSRequestOrderAddressListAddress.cs" />
+    <Compile Include="GVPSRequestOrderCommentList.cs" />
+    <Compile Include="GVPSRequestOrderCommentListComment.cs" />
+    <Compile Include="GVPSRequestOrderItemList.cs" />
+    <Compile Include="GVPSRequestOrderItemListItem.cs" />
+    <Compile Include="GVPSRequestTransactionCurrencyCodeEnum.cs" />
+    <Compile Include="GVPSRequestTransactionNotoIndEnum.cs" />
     <Compile Include="GVPSResponse.cs" />
     <Compile Include="IGarantiVPBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -14,8 +14,8 @@
     {
         private GVPSRequest request;
 
-        private readonly string REQUEST_TEST_MODE = "TEST";
-        private readonly string REQUEST_PROD_MODE = "PROD";
+        private readonly GVPSRequestModeEnum REQUEST_TEST_MODE = GVPSRequestModeEnum.Test;
+        private readonly GVPSRequestModeEnum REQUEST_PROD_MODE =  GVPSRequestModeEnum.Production;
         private readonly string REQUEST_USER_PROVAUT = "PROVAUT"; //Provizyon kullanıcısı
         private readonly string REQUEST_USER_PROVRFN = "PROVRFN"; //İptal ve İade işlemlerinde kullanılır
 
@@ -33,9 +33,9 @@
             request.Terminal.ProvUserID = REQUEST_USER_PROVAUT;
 
             request.Transaction = new Transaction();
-            request.Transaction.Type = TransactionType.sales.ToString();
-            request.Transaction.MotoInd = "N";
-            request.Transaction.CurrencyCode = String.Format("{0}", (int)CurrencyCode.TRL);
+            request.Transaction.Type = TransactionType.sales;
+            request.Transaction.MotoInd = GVPSRequestTransactionNotoIndEnum.ECommerce;
+            request.Transaction.CurrencyCode = CurrencyCode.TRL;
 
             this.REQUEST_URL = "https://sanalposprov.garanti.com.tr/VPServlet"; ;
         }
@@ -103,15 +103,15 @@
 
         public IGarantiVPBuilder Amount(double totalAmount, CurrencyCode currencyCode = CurrencyCode.TRL)
         {
-            request.Transaction.Amount = (Math.Round(totalAmount, 2) * 100).ToString();
-            request.Transaction.CurrencyCode = String.Format("{0}", (int)currencyCode);
+            request.Transaction.Amount = (ulong)(Math.Round(totalAmount, 2) * 100);
+            request.Transaction.CurrencyCode = currencyCode;
 
             return this;
         }
 
         public IGarantiVPBuilder Installment(int installment)
         {
-            request.Transaction.InstallmentCnt = installment <= 0 ? String.Empty : installment.ToString();
+            request.Transaction.InstallmentCnt = installment <= 0 ? string.Empty : installment.ToString();
 
             return this;
         }
@@ -131,8 +131,8 @@
 
         public GVPSResponse Sales()
         {
-            request.Transaction.Type = TransactionType.sales.ToString();
-            request.Transaction.CardholderPresentCode = "0";
+            request.Transaction.Type = TransactionType.sales;
+            request.Transaction.CardholderPresentCode =  GVPSRequestCardholderPresentCodeEnum.Normal;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                     request.Terminal.ID +
@@ -145,10 +145,10 @@
 
         public GVPSResponse Refund()
         {
-            request.Transaction.Type = TransactionType.refund.ToString();
+            request.Transaction.Type = TransactionType.refund;
             request.Terminal.ProvUserID = REQUEST_USER_PROVRFN;
-            request.Transaction.CardholderPresentCode = "0";
-            request.Transaction.MotoInd = "H";
+            request.Transaction.CardholderPresentCode = GVPSRequestCardholderPresentCodeEnum.Normal ;
+            request.Transaction.MotoInd = GVPSRequestTransactionNotoIndEnum.H;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                 request.Terminal.ID +
@@ -165,7 +165,7 @@
 
         public GVPSResponse Cancel(string RetrefNum)
         {
-            request.Transaction.Type = TransactionType.@void.ToString();
+            request.Transaction.Type = TransactionType.@void;
             request.Terminal.ProvUserID = REQUEST_USER_PROVRFN;
             request.Transaction.OriginalRetrefNum = RetrefNum;
 
@@ -179,9 +179,9 @@
 
         public GVPSResponse Preauth()
         {
-            request.Transaction.Type = TransactionType.preauth.ToString();
-            request.Transaction.MotoInd = "N";
-            request.Transaction.CardholderPresentCode = "0";
+            request.Transaction.Type = TransactionType.preauth;
+            request.Transaction.MotoInd = GVPSRequestTransactionNotoIndEnum.ECommerce;
+            request.Transaction.CardholderPresentCode = GVPSRequestCardholderPresentCodeEnum.Normal;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                     request.Terminal.ID +
@@ -199,8 +199,8 @@
 
         public GVPSResponse Postauth(string RetrefNum)
         {
-            request.Transaction.Type = TransactionType.postauth.ToString();
-            request.Transaction.CardholderPresentCode = "0";
+            request.Transaction.Type = TransactionType.postauth;
+            request.Transaction.CardholderPresentCode = GVPSRequestCardholderPresentCodeEnum.Normal ;
             request.Transaction.OriginalRetrefNum = RetrefNum;
 
             return Send();
@@ -210,7 +210,7 @@
         {
             request.Transaction.Verification = request.Transaction.Verification ?? new Verification();
 
-            request.Transaction.Type = TransactionType.identifyinq.ToString();
+            request.Transaction.Type = TransactionType.identifyinq;
             request.Transaction.Verification.Identity = TCKN;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
@@ -348,10 +348,8 @@
             try
             {
                 var responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", xmlString));
-
-                gvpResponse = DeSerializeObject<GVPSResponse>(responseString);
-                gvpResponse.RawRequest = xmlString;
                 gvpResponse.RawResponse = responseString;
+                gvpResponse = DeSerializeObject<GVPSResponse>(responseString);
             }
             catch (Exception ex)
             {
