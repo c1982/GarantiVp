@@ -20,7 +20,7 @@ namespace GarantiVP
         /// İşlemler Test sunucusuna yönlendirilir.
         /// </summary>
         /// <returns></returns>
-        IGarantiVPBuilder Test(bool test = true);
+        IGarantiVPBuilder Test(bool IsTest = true);
 
         /// <summary>
         /// Firma bilgileri
@@ -30,7 +30,7 @@ namespace GarantiVP
         /// <param name="userID"></param>
         /// <param name="userPassword"></param>
         /// <returns></returns>
-        IGarantiVPBuilder Company(string terminalId, string MerchantID, string userID, string userPassword);
+        IGarantiVPBuilder Company(string terminalId, string MerchantID, string userID, string userPassword, string SubMerchantID = null);
 
         /// <summary>
         /// Müşteri Bilgileri
@@ -50,6 +50,63 @@ namespace GarantiVP
         /// <param name="groupID"></param>
         /// <returns></returns>
         IGarantiVPBuilder Order(string orderID, string groupID = "");
+
+        /// <summary>
+        /// Sipariş ile ilgili adres bilgilerinin eklenmesi sağlar.
+        /// </summary>
+        /// <param name="type">Adres türü</param>
+        /// <param name="city"></param>
+        /// <param name="district"></param>
+        /// <param name="addressText"></param>
+        /// <param name="phone"></param>
+        /// <param name="name"></param>
+        /// <param name="lastName"></param>
+        /// <param name="Company"></param>
+        /// <param name="postalCode"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderAddress(GVPSAddressTypeEnum type, string city, string district, string addressText, string phone, string name, string lastName, string Company = null, string postalCode = null);
+
+        /// <summary>
+        /// Sipariş ile ilgili adres bilgilerinin eklenmesi sağlar.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderAddress(GVPSRequestOrderAddressListAddress address);
+
+        /// <summary>
+        /// Siparişe ait ürün / hizmet detayı eklenmesini sağlar.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="productCode"></param>
+        /// <param name="productId"></param>
+        /// <param name="prince"></param>
+        /// <param name="quantity"></param>
+        /// <param name="totalAmount"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, uint quantity, string description = null, double totalAmount = 0.0);
+
+        /// <summary>
+        /// Siparişe ait ürün / hizmet detayı eklenmesini sağlar.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderItem(GVPSRequestOrderItemListItem item);
+
+        /// <summary>
+        /// Raporlama ekranlarında kullanılmak üzere özel açıklama eklemek için kullanılır.
+        /// </summary>
+        /// <param name="number">Sanal pos ekranında tanımlanan parametre numarası</param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderComment(uint number, string text);
+
+        /// <summary>
+        /// Raporlama ekranlarında kullanılmak üzere özel açıklama eklemek için kullanılır.
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        IGarantiVPBuilder AddOrderComment(GVPSRequestOrderCommentListComment comment);
 
         /// <summary>
         /// Kredi Kartından çekilecek tutar

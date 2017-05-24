@@ -72,6 +72,11 @@
         [XmlElement]
         public string MerchantID { get; set; }
 
+        /// <summary>
+        /// Sub merchant reference
+        /// </summary>
+        public string SubMerchantID { get; set; }
+
     }
 
     /// <summary>

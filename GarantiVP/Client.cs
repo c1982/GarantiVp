@@ -1,6 +1,7 @@
 ﻿namespace GarantiVP
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Net.Security;
@@ -9,6 +10,7 @@
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
+    using System.Linq;
 
     public class Client : IGarantiVPBuilder
     {
@@ -20,13 +22,13 @@
         private readonly string REQUEST_USER_PROVRFN = "PROVRFN"; //İptal ve İade işlemlerinde kullanılır
 
         private string REQUEST_URL;
+        private string REQUEST_URL_FOR_3D;
         private string _secureString;
 
         public Client(bool test = false)
         {
             request = new GVPSRequest();
 
-            request.Mode = REQUEST_PROD_MODE;
             request.Version = "v0.01";
 
             request.Terminal = new Terminal();
@@ -37,7 +39,7 @@
             request.Transaction.MotoInd = GVPSRequestTransactionNotoIndEnum.ECommerce;
             request.Transaction.CurrencyCode = CurrencyCode.TRL;
 
-            this.REQUEST_URL = "https://sanalposprov.garanti.com.tr/VPServlet"; ;
+            this.Test(false);
         }
 
         public IGarantiVPBuilder Server(string posUrl)
@@ -48,22 +50,28 @@
             return this;
         }
 
-        public IGarantiVPBuilder Test(bool test = false)
+        public IGarantiVPBuilder Test(bool IsTest)
         {
-            if (test)
+            if (IsTest)
             {
                 this.REQUEST_URL = "https://sanalposprovtest.garanti.com.tr/VPServlet";
+                this.REQUEST_URL_FOR_3D = "https://sanalposprovtest.garanti.com.tr/servlet/gt3dengine";
                 request.Mode = REQUEST_TEST_MODE;
             }
-
+            else
+            {
+                this.REQUEST_URL = "https://sanalposprov.garanti.com.tr/VPServlet";
+                this.REQUEST_URL_FOR_3D = "https://sanalposprov.garanti.com.tr/servlet/gt3dengine";
+                request.Mode = REQUEST_PROD_MODE;
+            }
             return this;
         }
 
-
-        public IGarantiVPBuilder Company(string terminalId, string MerchantID, string userID, string userPassword)
+        public IGarantiVPBuilder Company(string terminalId, string MerchantID, string userID, string userPassword, string SubMerchantID = null)
         {
             request.Terminal.ID = terminalId; //isRequireZero(terminalId, 9);
             request.Terminal.MerchantID = MerchantID;
+            request.Terminal.SubMerchantID = SubMerchantID;
             request.Terminal.UserID = userID;
 
             this._secureString = GetSHA1(userPassword + isRequireZero(terminalId, 9)).ToUpper();
@@ -97,7 +105,141 @@
             request.Order = request.Order ?? new Order();
             request.Order.OrderID = orderID;
             request.Order.GroupID = groupID;
+            return this;
+        }
 
+        public IGarantiVPBuilder AddOrderAddress(GVPSAddressTypeEnum type, string city, string district, string addressText, string phone, string name, string lastName, string Company = null, string postalCode = null)
+        {
+            var address = new GVPSRequestOrderAddressListAddress();
+            address.Type = type;
+            address.City = city;
+            address.District = district;
+            address.Text = addressText;
+            address.PhoneNumber = phone;
+            address.Name = name;
+            address.LastName = lastName;
+            address.Company = Company;
+            address.PostalCode = postalCode;
+            return AddOrderAddress(address);
+        }
+
+        public IGarantiVPBuilder AddOrderAddress(GVPSRequestOrderAddressListAddress address)
+        {
+            if (address == null)
+            {
+                throw new ArgumentNullException("address");
+            }
+            if (request.Order == null)
+            {
+                throw new ArgumentException("Order must first be defined.", "Order");
+            }
+            if (address.Type == GVPSAddressTypeEnum.Unspecified)
+            {
+                throw new ArgumentOutOfRangeException("Type", "The address type must be defined.");
+            }
+            request.Order.AddressList = request.Order.AddressList ?? new GVPSRequestOrderAddressList();
+            request.Order.AddressList.Address = request.Order.AddressList.Address ?? new GVPSRequestOrderAddressListAddress[] { };
+            var Addresses = new List<GVPSRequestOrderAddressListAddress>();
+            Addresses.AddRange(request.Order.AddressList.Address);
+            if (Addresses.Where(e => e.Type.Equals(address.Type)).Count() > 0)
+            {
+                throw new ArgumentException("Address type already defined.");
+            }
+
+            Addresses.Add(address);
+            request.Order.AddressList.Address = Addresses.ToArray();
+            return this;
+        }
+
+        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, uint quantity, string description = null, double totalAmount = 0.0)
+        {
+            if ((number > 99) || (number < 1))
+            {
+                throw new ArgumentOutOfRangeException("number", "Must be between 1 and 99");
+            }
+            if (quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException("quantity", "Must be greater than 0");
+            }
+            if (totalAmount < 0)
+            {
+                throw new ArgumentOutOfRangeException("totalAmount", "Must be greater than 0");
+            }
+            totalAmount = (totalAmount == 0.0) ? (prince * quantity) : totalAmount;
+            var item = new GVPSRequestOrderItemListItem();
+            item.Description = description;
+            item.Number = number;
+            item.Prince = (ulong)(Math.Round(prince, 2) * 100);
+            item.ProductCode = productCode ;
+            item.ProductID = productId;
+            item.Quantity = quantity;
+            item.TotalAmount = (ulong)(Math.Round(totalAmount, 2) * 100);
+            return AddOrderItem(item);
+        }
+
+        public IGarantiVPBuilder AddOrderItem(GVPSRequestOrderItemListItem item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+            if (request.Order == null)
+            {
+                throw new ArgumentException("Order must first be defined.", "Order");
+            }
+            if ((item.Number > 99) || (item.Number < 1))
+            {
+                throw new ArgumentOutOfRangeException("Number", "Must be between 1 and 99");
+            }
+            if (item.Quantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Quantity", "Must be greater than 0");
+            }
+            if (item.TotalAmount < 0)
+            {
+                throw new ArgumentOutOfRangeException("TotalAmount", "Must be greater than 0");
+            }
+            request.Order.ItemList = request.Order.ItemList ?? new GVPSRequestOrderItemList();
+            request.Order.ItemList.Item = request.Order.ItemList.Item ?? new GVPSRequestOrderItemListItem[] { };
+            var Items = new List<GVPSRequestOrderItemListItem>();
+            Items.AddRange(request.Order.ItemList.Item);
+            Items.Add(item);
+            request.Order.ItemList.Item = Items.ToArray();
+            return this;
+        }
+
+        public IGarantiVPBuilder AddOrderComment(uint number, string text)
+        {
+            var comment = new GVPSRequestOrderCommentListComment();
+            comment.Number = number;
+            comment.Text = text;
+            return AddOrderComment(comment);
+        }
+
+        public IGarantiVPBuilder AddOrderComment(GVPSRequestOrderCommentListComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException("comment");
+            }
+            if (request.Order == null)
+            {
+                throw new ArgumentException("Order must first be defined.", "Order");
+            }
+            if (comment.Number <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Number");
+            }
+            request.Order.CommentList = request.Order.CommentList ?? new GVPSRequestOrderCommentList();
+            request.Order.CommentList.Comment = request.Order.CommentList.Comment ?? new GVPSRequestOrderCommentListComment[] { };
+            var Comments = new List<GVPSRequestOrderCommentListComment>();
+            Comments.AddRange(request.Order.CommentList.Comment);
+            if(Comments.Where(e => e.Number.Equals(comment.Number)).Count() > 0)
+            {
+                throw new ArgumentException("Comment number already defined.");
+            }
+            Comments.Add(comment);
+            request.Order.CommentList.Comment = Comments.ToArray();
             return this;
         }
 
@@ -338,7 +480,7 @@
             return returnSrting;
         }
 
-        private GVPSResponse Send()
+        private GVPSResponse Send(bool Use3D = false)
         {
             var gvpResponse = new GVPSResponse();
             var xmlString = SerializeObjectToXmlString<GVPSRequest>(request);
@@ -347,9 +489,19 @@
 
             try
             {
-                var responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", xmlString));
+                var responseString = string.Empty;
+                if (Use3D)
+                {
+                    responseString = SendHttpRequest(REQUEST_URL_FOR_3D, "Post", String.Format("data={0}", xmlString));
+                }
+                else
+                {
+                    responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", xmlString));
+                }
                 gvpResponse.RawResponse = responseString;
                 gvpResponse = DeSerializeObject<GVPSResponse>(responseString);
+                gvpResponse.RawRequest = xmlString;
+                gvpResponse.RawResponse = responseString;
             }
             catch (Exception ex)
             {
@@ -367,3 +519,4 @@
         #endregion
     }    
 }
+;

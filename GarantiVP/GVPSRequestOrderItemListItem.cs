@@ -57,6 +57,6 @@ namespace GarantiVP
         /// <para>Size 20 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public ulong Description { get; set; }
+        public string Description { get; set; }
     }
 }
