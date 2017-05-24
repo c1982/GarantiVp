@@ -79,13 +79,11 @@
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
-                                    .Amount(95, CurrencyCode.TRL)
+                                    .Amount(1234.567, CurrencyCode.TRL)
                                     .Sales();
 
             ValidateResult(_pay);
         }
-
-
 
         [TestMethod]
         public void SalesWithDetailsTest()

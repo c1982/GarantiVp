@@ -1,4 +1,4 @@
-GarantiVp
+﻿GarantiVp
 =========
 
 Garanti Bankası Sanal Pos İstemcisi .Net Framework üzerinde C# kullanılarak geliştirilmştir. Garanti Bankasının yeni 
@@ -124,10 +124,11 @@ https://sanalposprovtest.garanti.com.tr/servlet/gt3dengine<br/>
 <br/>
 Mağazalar dışarıdan erişirken gelecekleri ip ler:
 
-*194.29.209.225* (raporlama sayfaları)<br/>
-*194.29.209.226* (provizyon)<br/>
+Aşağıdaki host yapılandırmasına artık gerek yok DNS çözüyor.
+~~*194.29.209.225* (raporlama sayfaları)~~<br/>
+~~*194.29.209.226* (provizyon)~~<br/>
 
-hosts dosyasına Provizyon denemeleri sırasında *194.29.209.226 sanalposprovtest.garanti.com.tr*
+~~hosts dosyasına Provizyon denemeleri sırasında *194.29.209.226 sanalposprovtest.garanti.com.tr*~~
  
-Raporlar ekranı testleri sırasında *194.29.209.225  sanalposwebtest.garanti.com.tr* yazılması gerekiyor.
+~~Raporlar ekranı testleri sırasında *194.29.209.225  sanalposwebtest.garanti.com.tr* yazılması gerekiyor.~~
 
