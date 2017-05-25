@@ -3,7 +3,7 @@
 namespace GarantiVP
 {
     [XmlType(AnonymousType = true)]
-    public enum GVPSRequestCardholderPresentCodeEnum
+    public enum GVPSCardholderPresentCodeEnum
     {
         [XmlEnum("")]
         Unspecified,

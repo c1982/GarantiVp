@@ -6,7 +6,7 @@ namespace GarantiVP
     /// Address information
     /// </summary>
     [XmlType(AnonymousType = true)]
-    public class GVPSRequestOrderAddressListAddress
+    public class GVPSRequestAddress
     {
         /// <summary>
         /// Address type

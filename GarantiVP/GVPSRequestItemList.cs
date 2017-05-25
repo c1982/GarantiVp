@@ -6,9 +6,9 @@ namespace GarantiVP
     /// Contain for order items.
     /// </summary>
     [XmlType(AnonymousType=true)]
-    public class GVPSRequestOrderItemList
+    public class GVPSRequestItemList
     {
         [XmlElement("Item", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public GVPSRequestOrderItemListItem[] Item { get; set; }
+        public GVPSRequestItem[] Item { get; set; }
     }
 }

@@ -39,22 +39,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
+    <Compile Include="GarantiVPClient.cs" />
     <Compile Include="GVPSAddressTypeEnum.cs" />
+    <Compile Include="GVPSRequestCard.cs" />
+    <Compile Include="GVPSResponseChequeList.cs" />
+    <Compile Include="GVPSCurrencyCodeEnum.cs" />
+    <Compile Include="GVPSRequestCustomer.cs" />
+    <Compile Include="GVPSRequestOrder.cs" />
     <Compile Include="GVPSRequest.cs" />
-    <Compile Include="GVPSRequestCardholderPresentCodeEnum.cs" />
+    <Compile Include="GVPSCardholderPresentCodeEnum.cs" />
     <Compile Include="GVPSRequestModeEnum.cs" />
-    <Compile Include="GVPSRequestOrderAddressList.cs" />
-    <Compile Include="GVPSRequestOrderAddressListAddress.cs" />
-    <Compile Include="GVPSRequestOrderCommentList.cs" />
-    <Compile Include="GVPSRequestOrderCommentListComment.cs" />
-    <Compile Include="GVPSRequestOrderItemList.cs" />
-    <Compile Include="GVPSRequestOrderItemListItem.cs" />
-    <Compile Include="GVPSRequestTransactionCurrencyCodeEnum.cs" />
-    <Compile Include="GVPSRequestTransactionNotoIndEnum.cs" />
+    <Compile Include="GVPSRequestAddressList.cs" />
+    <Compile Include="GVPSRequestAddress.cs" />
+    <Compile Include="GVPSRequestCommentList.cs" />
+    <Compile Include="GVPSRequestComment.cs" />
+    <Compile Include="GVPSRequestItemList.cs" />
+    <Compile Include="GVPSRequestItem.cs" />
+    <Compile Include="GVPSMotoIndEnum.cs" />
     <Compile Include="GVPSResponse.cs" />
+    <Compile Include="GVPSResponseHostMsgList.cs" />
+    <Compile Include="GVPSResponseOrder.cs" />
+    <Compile Include="GVPSResponseTransaction.cs" />
+    <Compile Include="GVPSResponseRewardList.cs" />
+    <Compile Include="GVPSResponseReward.cs" />
+    <Compile Include="GVPSRewardTypeEnum.cs" />
+    <Compile Include="GVPSRequestTerminal.cs" />
+    <Compile Include="GVPSRequestTransaction.cs" />
+    <Compile Include="GVPSTransactionResponse.cs" />
+    <Compile Include="GVPSTransactionType.cs" />
+    <Compile Include="GVPSRequestVerification.cs" />
     <Compile Include="IGarantiVPBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GVPSResponseRewardInqResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="_ClassDiagram.cd" />

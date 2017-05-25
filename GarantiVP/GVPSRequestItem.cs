@@ -6,7 +6,7 @@ namespace GarantiVP
     /// Store for order items.
     /// </summary>
     [XmlType(AnonymousType = true)]
-    public class GVPSRequestOrderItemListItem
+    public class GVPSRequestItem
     {
         /// <summary>
         /// The order of the product / service

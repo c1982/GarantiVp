@@ -71,7 +71,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderAddress(GVPSRequestOrderAddressListAddress address);
+        IGarantiVPBuilder AddOrderAddress(GVPSRequestAddress address);
 
         /// <summary>
         /// Siparişe ait ürün / hizmet detayı eklenmesini sağlar.
@@ -91,7 +91,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderItem(GVPSRequestOrderItemListItem item);
+        IGarantiVPBuilder AddOrderItem(GVPSRequestItem item);
 
         /// <summary>
         /// Raporlama ekranlarında kullanılmak üzere özel açıklama eklemek için kullanılır.
@@ -106,7 +106,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderComment(GVPSRequestOrderCommentListComment comment);
+        IGarantiVPBuilder AddOrderComment(GVPSRequestComment comment);
 
         /// <summary>
         /// Kredi Kartından çekilecek tutar
@@ -114,7 +114,7 @@ namespace GarantiVP
         /// <param name="totalAmount">Tutar</param>
         /// <param name="currencyCode">Para Birimi. Varsayılan: TRL</param>
         /// <returns></returns>
-        IGarantiVPBuilder Amount(double totalAmount, CurrencyCode currencyCode = CurrencyCode.TRL);
+        IGarantiVPBuilder Amount(double totalAmount, GVPSCurrencyCodeEnum currencyCode = GVPSCurrencyCodeEnum.TRL);
 
         /// <summary>
         /// Taksitli işlemlerde işlem tutarının üzerinden belli bir oranda peşinat alınmasının sağlanması için kullanılan işlemdir.

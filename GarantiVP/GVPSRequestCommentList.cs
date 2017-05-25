@@ -3,9 +3,9 @@
 namespace GarantiVP
 {
     [XmlType(AnonymousType = false)]
-    public class GVPSRequestOrderCommentList
+    public class GVPSRequestCommentList
     {
         [XmlElement("Comment", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public GVPSRequestOrderCommentListComment[] Comment { get; set; }
+        public GVPSRequestComment[] Comment { get; set; }
     }
 }

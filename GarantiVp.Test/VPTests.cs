@@ -11,6 +11,8 @@
         //GARANTI VPos definations
         private const string MerchandID = "7000679";
         private const string SubMerchandID = "";
+
+        //GARANTI Terminal definations
         private const string TerminalID_For_XML = "30691244";
         private const string TerminalID_For_3D = "30691297";
         private const string TerminalID_For_3D_PAY = "30691298";
@@ -25,15 +27,15 @@
         private const string Securekey = "12345678";
 
         //GARANTI VPos test configuration
-        private string TerminalID = TerminalID_For_XML;
+        private string TerminalID = TerminalID_For_3D;
         private string UserID = ProvUserID_For_XML;
         private string UserPassword = ProvUserPassword;
 
         //Credit card details
-        private const string credit_card_number = "4282209027132016";
-        private const string credit_card_cvv2 = "232";
-        private const int credit_card_month = 5;
-        private const int credit_card_year = 15;
+        private const string credit_card_number = "4824894728063019";
+        private const string credit_card_cvv2 = "959";
+        private const int credit_card_month = 6;
+        private const int credit_card_year = 17;
 
         //Credit card details for 3D
         private const string credit_card_number_for_3D = "4282209004348015";
@@ -68,36 +70,62 @@
 
             Assert.AreEqual("00", _pay.Transaction.Response.Code);
             Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
+
+            Debug.WriteLine("AuthCode: " + _pay.Transaction.AuthCode);
+            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
+            if((_pay.Transaction.HostMsgList != null) && (_pay.Transaction.HostMsgList.HostMsg != null))
+            {
+                foreach (string item in _pay.Transaction.HostMsgList.HostMsg)
+                {
+                    Debug.WriteLine("HostMsg: " + item);
+                }
+            }
+            Debug.WriteLine("ProvDate: " + _pay.Transaction.ProvDate);
+            Debug.WriteLine("RetrefNum: " + _pay.Transaction.RetrefNum);
+            if(_pay.Transaction.RewardInqResult != null)
+            {
+                if (_pay.Transaction.RewardInqResult.ChequeList != null)
+                {
+                }
+                if (_pay.Transaction.RewardInqResult.RewardList != null)
+                {
+                }
+
+            }
+            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
+            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
+            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
         }
 
         [TestMethod]
         public void SalesTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
-                                    .Amount(1234.567, CurrencyCode.TRL)
+                                    .Amount(1234.567, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();
-
             ValidateResult(_pay);
+            
         }
 
         [TestMethod]
         public void SalesWithDetailsTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
                                     .AddOrderAddress(GVPSAddressTypeEnum.Billing, order_address_city, order_address_district, order_address_text , order_address_phone, null, null, order_address_name, order_address_postalCode)
-                                    .AddOrderItem(1, "0001", "ProductA", 1.5, 3, "product description")
-                                    .AddOrderComment(1, " COMMENT1 alanı açıklaması")
-                                    .Amount(95, CurrencyCode.TRL)
+                                    .AddOrderItem(1, "0001", "ProductA ğüşiöçĞÜŞİÖÇ", 1.5, 3, "product A ğüşiöçĞÜŞİÖÇ description")
+                                    .AddOrderItem(2, "0002", "ProductB", 1.4, 1, "product B description")
+                                    .AddOrderComment(1, "COM1 ğüşiöçĞÜŞİÖÇ")
+                                    .Amount(95, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();
 
             ValidateResult(_pay);
@@ -106,13 +134,13 @@
         [TestMethod]
         public void Sales_USD_Test()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
-                                    .Amount(95, CurrencyCode.USD)
+                                    .Amount(95, GVPSCurrencyCodeEnum.USD)
                                     .Sales();
 
             ValidateResult(_pay);
@@ -121,7 +149,7 @@
         [TestMethod]
         public void SalesWithInstallmentTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -137,7 +165,7 @@
         [TestMethod]
         public void Delay_SalesTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -153,7 +181,7 @@
         [TestMethod]
         public void DownPaymentRate_SalesTest()
         {
-            var _pay = new Client().Test(true)
+            var _pay = new GarantiVPClient().Test(true)
                                         .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                             .Customer(customer_email, customer_ipAddress)
                                             .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
@@ -176,7 +204,7 @@
         [TestMethod]
         public void CancelTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVRFN", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -190,7 +218,7 @@
         [TestMethod]
         public void RefundTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -204,7 +232,7 @@
         [TestMethod]
         public void RefundCancelTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -218,7 +246,7 @@
         [TestMethod]
         public void PreauthSalesTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -233,7 +261,7 @@
         [TestMethod]
         public void PostauthSalesTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -248,7 +276,7 @@
         [TestMethod]
         public void PostauthSalesCancelTest()
         {
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -264,7 +292,7 @@
         {
             var tc_kimlik_no = "000000000000";
 
-            var _pay = new Client()
+            var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)

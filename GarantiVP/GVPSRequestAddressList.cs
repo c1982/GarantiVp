@@ -3,9 +3,9 @@
 namespace GarantiVP
 {
     [XmlType(AnonymousType = true)]
-    public class GVPSRequestOrderAddressList
+    public class GVPSRequestAddressList
     {
         [XmlElement("Address", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public GVPSRequestOrderAddressListAddress[] Address { get; set; }
+        public GVPSRequestAddress[] Address { get; set; }
     }
 }

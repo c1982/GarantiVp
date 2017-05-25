@@ -3,7 +3,7 @@
 namespace GarantiVP
 {
     [XmlType(AnonymousType = true)]
-    public enum GVPSRequestTransactionNotoIndEnum
+    public enum GVPSMotoIndEnum
     {
         [XmlEnum("")]
         Unspecified,
