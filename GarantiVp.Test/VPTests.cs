@@ -77,24 +77,29 @@
             {
                 foreach (string item in _pay.Transaction.HostMsgList.HostMsg)
                 {
-                    Debug.WriteLine("HostMsg: " + item);
+                    Debug.WriteLine("Bank message : " + item);
                 }
             }
-            Debug.WriteLine("ProvDate: " + _pay.Transaction.ProvDate);
+            var ProvDate = _pay.Transaction.ProvDate;
+            var ProvisionDate = new DateTime(int.Parse(ProvDate.Substring(0, 4)), int.Parse(ProvDate.Substring(4, 2)), int.Parse(ProvDate.Substring(6, 2)), int.Parse(ProvDate.Substring(9, 2)), int.Parse(ProvDate.Substring(12, 2)), int.Parse(ProvDate.Substring(15, 2)));
+            Debug.WriteLine("Provision date : " + ProvisionDate);
             Debug.WriteLine("RetrefNum: " + _pay.Transaction.RetrefNum);
             if(_pay.Transaction.RewardInqResult != null)
             {
                 if (_pay.Transaction.RewardInqResult.ChequeList != null)
                 {
+                    //TODO _pay.Transaction.RewardInqResult.ChequeList childs
                 }
-                if (_pay.Transaction.RewardInqResult.RewardList != null)
+                if ((_pay.Transaction.RewardInqResult.RewardList != null) && (_pay.Transaction.RewardInqResult.RewardList.Reward != null))
                 {
+                    foreach (GVPSResponseReward item in _pay.Transaction.RewardInqResult.RewardList.Reward)
+                    {
+                        Debug.WriteLine("Reward\n Type: {0}\n Used: {1}\n Earned:{2}", item.Type, (item.TotalAmount / 100), (item.LastTxnGainAmount / 100));
+                    }
                 }
 
             }
-            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
-            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
-            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
+            Debug.WriteLine("SequenceNum: " + _pay.Transaction.SequenceNum);
         }
 
         [TestMethod]
