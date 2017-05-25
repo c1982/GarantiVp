@@ -518,7 +518,7 @@
             {
                 gvpResponse.Transaction = new GVPSResponseTransaction();
                 gvpResponse.Order = new GVPSResponseOrder();
-                gvpResponse.Transaction.Response = new GVPSTransactionResponse();
+                gvpResponse.Transaction.Response = new GVPSResponseTransactionResponse();
 
                 gvpResponse.Transaction.Response.Code = "99";
                 gvpResponse.Transaction.Response.Message = ex.Message;

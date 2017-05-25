@@ -65,7 +65,7 @@
     <Compile Include="GVPSRewardTypeEnum.cs" />
     <Compile Include="GVPSRequestTerminal.cs" />
     <Compile Include="GVPSRequestTransaction.cs" />
-    <Compile Include="GVPSTransactionResponse.cs" />
+    <Compile Include="GVPSResponseTransactionResponse.cs" />
     <Compile Include="GVPSTransactionType.cs" />
     <Compile Include="GVPSRequestVerification.cs" />
     <Compile Include="IGarantiVPBuilder.cs" />

@@ -3,7 +3,7 @@
 namespace GarantiVP
 {
     [XmlType(AnonymousType =true)]
-    public class GVPSTransactionResponse
+    public class GVPSResponseTransactionResponse
     {
 
         [XmlElement]

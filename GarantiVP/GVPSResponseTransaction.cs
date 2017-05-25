@@ -6,7 +6,7 @@ namespace GarantiVP
     public class GVPSResponseTransaction
     {
         [XmlElement]
-        public GVPSTransactionResponse Response { get; set; }
+        public GVPSResponseTransactionResponse Response { get; set; }
 
         [XmlElement]
         public string RetrefNum { get; set; }
