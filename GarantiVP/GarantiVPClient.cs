@@ -16,14 +16,28 @@
     {
         private GVPSRequest request;
 
-        private readonly GVPSRequestModeEnum REQUEST_TEST_MODE = GVPSRequestModeEnum.Test;
-        private readonly GVPSRequestModeEnum REQUEST_PROD_MODE =  GVPSRequestModeEnum.Production;
-        private readonly string REQUEST_USER_PROVAUT = "PROVAUT"; //Provizyon kullanıcısı
-        private readonly string REQUEST_USER_PROVRFN = "PROVRFN"; //İptal ve İade işlemlerinde kullanılır
+        private const GVPSRequestModeEnum REQUEST_TEST_MODE = GVPSRequestModeEnum.Test;
+        private const GVPSRequestModeEnum REQUEST_PROD_MODE =  GVPSRequestModeEnum.Production;
+        private const string REQUEST_USER_PROVAUT = "PROVAUT"; //Provizyon kullanıcısı
+        private const string REQUEST_USER_PROVRFN = "PROVRFN"; //İptal ve İade işlemlerinde kullanılır
 
         private string REQUEST_URL;
         private string REQUEST_URL_FOR_3D;
         private string _secureString;
+        private Encoding usingEncoding = Encoding.GetEncoding("iso-8859-9");
+
+        public Encoding UsingEncoding
+        {
+            get
+            {
+                return usingEncoding;
+            }
+
+            private set
+            {
+                usingEncoding = value;
+            }
+        }
 
         public GarantiVPClient(bool test = false)
         {
@@ -392,7 +406,8 @@
             var sha = new SHA1CryptoServiceProvider();
             var HashedPassword = SHA1Data;
 
-            byte[] hashbytes = Encoding.GetEncoding("iso-8859-9").GetBytes(HashedPassword);
+            byte[] hashbytes = UsingEncoding.GetBytes(HashedPassword);
+            //byte[] hashbytes = Encoding.GetEncoding("iso-8859-9").GetBytes(HashedPassword);
             byte[] inputbytes = sha.ComputeHash(hashbytes);
 
             return GetHexaDecimal(inputbytes);
@@ -418,14 +433,13 @@
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             MemoryStream memoryStream = new MemoryStream();
-            Encoding TextEncoder = Encoding.GetEncoding("iso-8859-9");
-            XmlTextWriter xmlWriter = new XmlTextWriter(memoryStream, TextEncoder);
+            XmlTextWriter xmlWriter = new XmlTextWriter(memoryStream, UsingEncoding);
 
             xmlSerializer.Serialize(xmlWriter, TModel, EmptyNameSpace);
 
             memoryStream = (MemoryStream)xmlWriter.BaseStream;
             //xmlData = UTF8ByteArrayToString(memoryStream.ToArray());
-            xmlData = TextEncoder.GetString(memoryStream.ToArray());
+            xmlData = UsingEncoding.GetString(memoryStream.ToArray());
 
             return xmlData;
         }
