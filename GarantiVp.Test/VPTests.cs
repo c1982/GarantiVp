@@ -128,7 +128,7 @@
                                     .Order(Guid.NewGuid().ToString("N"))
                                     .AddOrderAddress(GVPSAddressTypeEnum.Billing, order_address_city, order_address_district, order_address_text , order_address_phone, null, null, order_address_name, order_address_postalCode)
                                     .AddOrderItem(1, "0001", "ProductA ğüşiöçĞÜŞİÖÇ", 1.5, 3, "product A ğüşiöçĞÜŞİÖÇ description")
-                                    .AddOrderItem(2, "0002", "ProductB", 1.4, 1, "product B description")
+                                    .AddOrderItem(2, "0002", "ProductB", 1.4, 1.1, "product B description")
                                     .AddOrderComment(1, "COM1 ğüşiöçĞÜŞİÖÇ")
                                     .Amount(95, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();

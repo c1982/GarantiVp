@@ -165,7 +165,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, uint quantity, string description = null, double totalAmount = 0.0)
+        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, double quantity, string description = null, double totalAmount = 0.0)
         {
             if ((number > 99) || (number < 1))
             {
@@ -186,7 +186,7 @@
             item.Prince = (ulong)(Math.Round(prince, 2) * 100);
             item.ProductCode = productCode ;
             item.ProductID = productId;
-            item.Quantity = quantity;
+            item.Quantity = quantity.ToString();
             item.TotalAmount = (ulong)(Math.Round(totalAmount, 2) * 100);
             return AddOrderItem(item);
         }
