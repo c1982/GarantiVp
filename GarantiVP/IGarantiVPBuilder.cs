@@ -84,7 +84,7 @@ namespace GarantiVP
         /// <param name="totalAmount"></param>
         /// <param name="description"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, uint quantity, string description = null, double totalAmount = 0.0);
+        IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, double quantity, string description = null, double totalAmount = 0.0);
 
         /// <summary>
         /// Siparişe ait ürün / hizmet detayı eklenmesini sağlar.

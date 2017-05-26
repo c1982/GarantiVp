@@ -34,7 +34,7 @@ namespace GarantiVP
         /// <para>Size 13 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public uint Quantity { get; set; }
+        public string Quantity { get; set; }
 
         /// <summary>
         /// Unit amount

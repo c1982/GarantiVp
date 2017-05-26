@@ -205,7 +205,8 @@
             {
                 throw new ArgumentOutOfRangeException("Number", "Must be between 1 and 99");
             }
-            if (item.Quantity <= 0)
+            var Quantity = 0.0;
+            if ((!double.TryParse(item.Quantity,out Quantity)) || (Quantity <= 0))
             {
                 throw new ArgumentOutOfRangeException("Quantity", "Must be greater than 0");
             }

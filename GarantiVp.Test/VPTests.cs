@@ -132,7 +132,6 @@
                                     .AddOrderComment(1, "COM1 ğüşiöçĞÜŞİÖÇ")
                                     .Amount(95, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();
-
             ValidateResult(_pay);
         }
 
