@@ -186,7 +186,7 @@
             item.Prince = (ulong)(Math.Round(prince, 2) * 100);
             item.ProductCode = productCode ;
             item.ProductID = productId;
-            item.Quantity = quantity.ToString();
+            item.Quantity = (ulong)(Math.Round(quantity, 2) * 100);
             item.TotalAmount = (ulong)(Math.Round(totalAmount, 2) * 100);
             return AddOrderItem(item);
         }
@@ -205,8 +205,7 @@
             {
                 throw new ArgumentOutOfRangeException("Number", "Must be between 1 and 99");
             }
-            var Quantity = 0.0;
-            if ((!double.TryParse(item.Quantity,out Quantity)) || (Quantity <= 0))
+            if (item.Quantity <= 0)
             {
                 throw new ArgumentOutOfRangeException("Quantity", "Must be greater than 0");
             }
