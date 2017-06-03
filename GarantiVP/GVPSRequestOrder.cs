@@ -45,7 +45,13 @@ namespace GarantiVP
         [XmlElement("CommentList", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public GVPSRequestCommentList CommentList { get; set; }
 
-        //TODO Recurring
+        /// <summary>
+        /// Repetitive transaction information
+        /// <para lang="tr">Tekrarlanan işlem bilgileri</para> 
+        /// </summary>
+        [XmlElement]
+        public GVPSRequestRecurring Recurring { get; set; }
+        
         //TODO StartDate
         //TODO EndDate
         //TODO ListPageNum

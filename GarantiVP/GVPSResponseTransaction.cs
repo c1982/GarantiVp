@@ -8,6 +8,10 @@ namespace GarantiVP
         [XmlElement]
         public GVPSResponseTransactionResponse Response { get; set; }
 
+        /// <summary>
+        /// Number generated for cancellation, refund and variable payment transactions
+        /// <para lang="tr">İptal, geri ödeme ve değişken ödeme işlemleri için üretilen numara</para> 
+        /// </summary>
         [XmlElement]
         public string RetrefNum { get; set; }
 

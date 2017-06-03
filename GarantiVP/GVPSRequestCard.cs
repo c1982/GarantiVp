@@ -11,7 +11,7 @@ namespace GarantiVP
     {
         /// <summary>
         /// Card number
-        /// <para>Size Min:15, Max:19 Byte</para>
+        /// <para>Size numeric Min:15, Max:19 Byte</para>
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Number { get; set; }
@@ -25,7 +25,7 @@ namespace GarantiVP
 
         /// <summary>
         /// Card CVV number.
-        /// <para>Size Min:3, Max:4 Byte</para>
+        /// <para>Size Min:3, Max:4 Byte (AMEX)</para>
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string CVV2 { get; set; }

@@ -165,7 +165,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double prince, double quantity, string description = null, double totalAmount = 0.0)
+        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double price, double quantity, string description = null, double totalAmount = 0.0)
         {
             if ((number > 99) || (number < 1))
             {
@@ -179,11 +179,11 @@
             {
                 throw new ArgumentOutOfRangeException("totalAmount", "Must be greater than 0");
             }
-            totalAmount = (totalAmount == 0.0) ? (prince * quantity) : totalAmount;
+            totalAmount = (totalAmount == 0.0) ? (price * quantity) : totalAmount;
             var item = new GVPSRequestItem();
             item.Description = description;
             item.Number = number;
-            item.Prince = (ulong)(Math.Round(prince, 2) * 100);
+            item.Prince = (ulong)(Math.Round(price, 2) * 100);
             item.ProductCode = productCode ;
             item.ProductID = productId;
             item.Quantity = (ulong)(Math.Round(quantity, 2) * 100);
@@ -503,11 +503,11 @@
                 var responseString = string.Empty;
                 if (Use3D)
                 {
-                    responseString = SendHttpRequest(REQUEST_URL_FOR_3D, "Post", String.Format("data={0}", WebUtility.UrlEncode(xmlString)));
+                    responseString = SendHttpRequest(REQUEST_URL_FOR_3D, "Post", String.Format("data={0}", System.Net.WebUtility.UrlEncode(xmlString)));
                 }
                 else
                 {
-                    responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", WebUtility.UrlEncode(xmlString)));
+                    responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", System.Net.WebUtility.UrlEncode(xmlString)));
                 }
                 gvpResponse.RawResponse = responseString;
                 gvpResponse = DeSerializeObject<GVPSResponse>(responseString);
