@@ -291,6 +291,18 @@
 
         public GVPSResponse Sales()
         {
+            if (request == null)
+                throw new ArgumentNullException("request");
+            if ((request.Order == null) || string.IsNullOrWhiteSpace(request.Order.OrderID))
+                throw new ArgumentNullException("Order ID");
+            if ((request.Card == null) || string.IsNullOrWhiteSpace(request.Card.Number))
+                throw new ArgumentNullException("Card Number");
+            if ((request.Terminal == null) || string.IsNullOrWhiteSpace(request.Terminal.ID))
+                throw new ArgumentNullException("Terminal ID");
+            if (request.Transaction == null)
+                throw new ArgumentNullException("Transaction");
+
+
             request.Transaction.Type = GVPSTransactionType.sales;
             request.Transaction.CardholderPresentCode =  GVPSCardholderPresentCodeEnum.Normal;
 
@@ -325,6 +337,18 @@
 
         public GVPSResponse Cancel(string RetrefNum)
         {
+            if (request == null)
+                throw new ArgumentNullException("request");
+            if (request.Order == null)
+                throw new ArgumentNullException("Order");
+            if (string.IsNullOrWhiteSpace(request.Order.OrderID))
+                throw new ArgumentNullException("OrderID");
+            if (request.Terminal == null)
+                throw new ArgumentNullException("Terminal");
+            if (string.IsNullOrWhiteSpace(request.Terminal.ID))
+                throw new ArgumentNullException("Terminal ID");
+            if (request.Transaction == null)
+                throw new ArgumentNullException("Transaction");
             request.Transaction.Type = GVPSTransactionType.@void;
             request.Terminal.ProvUserID = REQUEST_USER_PROVRFN;
             request.Transaction.OriginalRetrefNum = RetrefNum;
