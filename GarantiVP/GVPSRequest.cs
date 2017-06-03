@@ -27,11 +27,12 @@
 
         /// <summary>
         /// Channel code
+        /// <para>ChannelCode field must be one of 'A,R,S,O,P,D,T' chars.</para>
         /// <para>Size 1 Byte alfanumeric</para> 
         /// <para lang="tr">Kanal kodu.</para> 
         /// </summary>
         [XmlElement]
-        public char ChannelCode { get; set; }
+        public string ChannelCode { get; set; }
 
         /// <summary>
         /// Virtual pos validation parameters

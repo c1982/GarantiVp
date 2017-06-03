@@ -41,7 +41,27 @@
   <ItemGroup>
     <Compile Include="GarantiVPClient.cs" />
     <Compile Include="GVPSAddressTypeEnum.cs" />
+    <Compile Include="GVPSFrequencyTypeEnum.cs" />
+    <Compile Include="GVPSPaymentTypeEnum.cs" />
+    <Compile Include="GVPSRecurringTypeEnum.cs" />
     <Compile Include="GVPSRequestCard.cs" />
+    <Compile Include="GVPSRequestCepBank.cs" />
+    <Compile Include="GVPSRequestCepBankIng.cs" />
+    <Compile Include="GVPSRequestChequeList.cs" />
+    <Compile Include="GVPSRequestCommercialCardExtendedCredit.cs" />
+    <Compile Include="GVPSRequestGSMUnitInq.cs" />
+    <Compile Include="GVPSRequestGSMUnitSales.cs" />
+    <Compile Include="GVPSRequestMoneyCard.cs" />
+    <Compile Include="GVPSRequestPayment.cs" />
+    <Compile Include="GVPSRequestPaymentList.cs" />
+    <Compile Include="GVPSRequestRecurring.cs" />
+    <Compile Include="GVPSRequestRewardList.cs" />
+    <Compile Include="GVPSRequestSecure3D.cs" />
+    <Compile Include="GVPSRequestSettlementInq.cs" />
+    <Compile Include="GVPSRequestTransactionInqBase.cs" />
+    <Compile Include="GVPSRequestUtilityPayment.cs" />
+    <Compile Include="GVPSRequestUtilityPaymentInq.cs" />
+    <Compile Include="GVPSRequestUtilityPaymentVoidInq.cs" />
     <Compile Include="GVPSResponseChequeList.cs" />
     <Compile Include="GVPSCurrencyCodeEnum.cs" />
     <Compile Include="GVPSRequestCustomer.cs" />
