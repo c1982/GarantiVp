@@ -44,15 +44,15 @@
         private const int credit_card_year_for_3D = 15;
 
         //Order details
-        static string orderId = "cc5f63d899e64f39b996b1e9156a270e";
-        private string OrderRefNumber = "000014610000";
-        static string orderIdForCancel; //Getting SalesTest
+        static string OrderId = "cc5f63d899e64f39b996b1e9156a270e";
+        static string OrderIdForCancel; //Getting SalesTest
         static string OrderRefNumberForCancel; //Getting SalesTest
-        static string orderIdForRefund; //Getting SalesWithDetailsTest
-        static string orderIdForRefundCancel; //Getting RefundTest
+        static string OrderIdForRefund; //Getting SalesWithDetailsTest
+        static string OrderIdForRefundCancel; //Getting RefundTest
         static string OrderRefNumberForRefundCancel; //Getting RefundTest
-        static string orderIdForPreAuthSales; //Getting PreAuthSales
+        static string OrderIdForPreAuthSales; //Getting PreAuthSales
         static string OrderRefNumberForPreaAuthSales; //Getting PreAuthSales
+        static bool PreAuthCancelTestSuccess;
 
         //Order address details
         private const string order_address_name = "TÜBİTAK";
@@ -71,17 +71,16 @@
             Debug.WriteLine("Request: " + _pay.RawRequest);
             Debug.WriteLine("Response: " + _pay.RawResponse);
 
-            Debug.WriteLine(_pay.Transaction.Response.Message);
-            Debug.WriteLine(_pay.Transaction.Response.ErrorMsg);
-            Debug.WriteLine(_pay.Transaction.Response.SysErrMsg);
+            Debug.WriteLine("Message: " + _pay.Transaction.Response.Message);
+            Debug.WriteLine("ErrorMsg: " + _pay.Transaction.Response.ErrorMsg);
+            Debug.WriteLine("SysErrMsg: " + _pay.Transaction.Response.SysErrMsg);
 
-            Assert.AreEqual("00", _pay.Transaction.Response.Code);
-            Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
-
-            Debug.WriteLine("OrderID: " + _pay.Order.OrderID);
+            Debug.WriteLine("OrderID: " + ((_pay.Order == null) ? "" : _pay.Order.OrderID));
+            Debug.WriteLine("RetrefNum: " + _pay.Transaction.RetrefNum);
             Debug.WriteLine("AuthCode: " + _pay.Transaction.AuthCode);
+            Debug.WriteLine("SequenceNum: " + _pay.Transaction.SequenceNum);
             Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
-            if((_pay.Transaction.HostMsgList != null) && (_pay.Transaction.HostMsgList.HostMsg != null))
+            if ((_pay.Transaction.HostMsgList != null) && (_pay.Transaction.HostMsgList.HostMsg != null))
             {
                 foreach (string item in _pay.Transaction.HostMsgList.HostMsg)
                 {
@@ -89,10 +88,13 @@
                 }
             }
             var ProvDate = _pay.Transaction.ProvDate;
-            var ProvisionDate = new DateTime(int.Parse(ProvDate.Substring(0, 4)), int.Parse(ProvDate.Substring(4, 2)), int.Parse(ProvDate.Substring(6, 2)), int.Parse(ProvDate.Substring(9, 2)), int.Parse(ProvDate.Substring(12, 2)), int.Parse(ProvDate.Substring(15, 2)));
-            Debug.WriteLine("Provision date : " + ProvisionDate);
-            Debug.WriteLine("RetrefNum: " + _pay.Transaction.RetrefNum);
-            if(_pay.Transaction.RewardInqResult != null)
+            object ProvisionDate = null;
+            if (!string.IsNullOrWhiteSpace(ProvDate))
+            { 
+                ProvisionDate = new DateTime(int.Parse(ProvDate.Substring(0, 4)), int.Parse(ProvDate.Substring(4, 2)), int.Parse(ProvDate.Substring(6, 2)), int.Parse(ProvDate.Substring(9, 2)), int.Parse(ProvDate.Substring(12, 2)), int.Parse(ProvDate.Substring(15, 2)));
+            }
+            Debug.WriteLine("Provision date: " + ProvisionDate);
+            if (_pay.Transaction.RewardInqResult != null)
             {
                 if (_pay.Transaction.RewardInqResult.ChequeList != null)
                 {
@@ -107,7 +109,9 @@
                 }
 
             }
-            Debug.WriteLine("SequenceNum: " + _pay.Transaction.SequenceNum);
+
+            Assert.AreEqual("00", _pay.Transaction.Response.Code);
+            Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
         }
 
 
@@ -123,8 +127,8 @@
         [TestInitialize()]
         private void Initial()
         {
-            orderId = Guid.NewGuid().ToString("N"); //GenerateMD5(DateTime.Now.ToString());
-            orderIdForCancel = orderId;
+            OrderId = Guid.NewGuid().ToString("N"); //GenerateMD5(DateTime.Now.ToString());
+            OrderIdForCancel = OrderId;
         }
         
         [TestMethod]
@@ -139,7 +143,7 @@
                                     .Amount(1234.567, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();
             ValidateResult(_pay);
-            orderIdForCancel = _pay.Order.OrderID;
+            OrderIdForCancel = _pay.Order.OrderID;
             OrderRefNumberForCancel = _pay.Transaction.RetrefNum;
         }
 
@@ -159,7 +163,7 @@
                                     .Amount(95, GVPSCurrencyCodeEnum.TRL)
                                     .Sales();
             ValidateResult(_pay);
-            orderIdForRefund = _pay.Order.OrderID;
+            OrderIdForRefund = _pay.Order.OrderID;
         }
 
         [TestMethod]
@@ -237,21 +241,21 @@
         {
             var sw = new Stopwatch();
             sw.Start();
-            while (string.IsNullOrWhiteSpace(orderIdForCancel) && (sw.ElapsedMilliseconds < 10000))
+            while (string.IsNullOrWhiteSpace(OrderIdForCancel) && (sw.ElapsedMilliseconds < 10000))
             {
                 System.Threading.Thread.SpinWait(1000);
             }
             sw.Stop();
             sw = null;
-            if (string.IsNullOrWhiteSpace(orderIdForCancel))
+            if (string.IsNullOrWhiteSpace(OrderIdForCancel))
                 throw new ArgumentNullException("orderIdForCancel");
-            if (string.IsNullOrWhiteSpace(orderIdForCancel))
+            if (string.IsNullOrWhiteSpace(OrderIdForCancel))
                 throw new ArgumentNullException("OrderRefNumberForCancel");
             var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVRFN", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
-                                    .Order(orderIdForCancel)
+                                    .Order(OrderIdForCancel)
                                     .Amount(95)
                                     .Cancel(OrderRefNumberForCancel);
 
@@ -263,24 +267,24 @@
         {
             var sw = new Stopwatch();
             sw.Start();
-            while (string.IsNullOrWhiteSpace(orderIdForRefund) && (sw.ElapsedMilliseconds < 10000))
+            while (string.IsNullOrWhiteSpace(OrderIdForRefund) && (sw.ElapsedMilliseconds < 10000))
             {
                 System.Threading.Thread.SpinWait(1000);
             }
             sw.Stop();
             sw = null;
-            if (string.IsNullOrWhiteSpace(orderIdForRefund))
+            if (string.IsNullOrWhiteSpace(OrderIdForRefund))
                 throw new ArgumentNullException("orderIdForRefund");
             var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
-                                    .Order(orderIdForRefund)
+                                    .Order(OrderIdForRefund)
                                     .Amount(95)
                                     .Refund();
 
             ValidateResult(_pay);
-            orderIdForRefundCancel = _pay.Order.OrderID;
+            OrderIdForRefundCancel = _pay.Order.OrderID;
             OrderRefNumberForRefundCancel = _pay.Transaction.RetrefNum;
         }
 
@@ -301,7 +305,7 @@
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
-                                    .Order(orderIdForRefundCancel)
+                                    .Order(OrderIdForRefundCancel)
                                     .Amount(95)
                                     .RefundCancel(OrderRefNumberForRefundCancel);
 
@@ -321,7 +325,7 @@
                                     .Preauth();
 
             ValidateResult(_pay);
-            orderIdForPreAuthSales = _pay.Order.OrderID;
+            OrderIdForPreAuthSales = _pay.Order.OrderID;
             OrderRefNumberForPreaAuthSales = _pay.Transaction.RetrefNum;
         }
 
@@ -330,20 +334,23 @@
         {
             var sw = new Stopwatch();
             sw.Start();
-            while (string.IsNullOrWhiteSpace(orderIdForPreAuthSales) && (sw.ElapsedMilliseconds < 10000))
+            while ((!PreAuthCancelTestSuccess) && (sw.ElapsedMilliseconds < 10000))
             {
                 System.Threading.Thread.SpinWait(1000);
             }
             sw.Stop();
             sw = null;
-            if (string.IsNullOrWhiteSpace(orderIdForPreAuthSales))
-                throw new ArgumentNullException("orderIdForPreAuthSales");
+            OrderIdForPreAuthSales = null;
+            OrderRefNumberForPreaAuthSales = null;
+            PreauthSalesTest();
+            if (string.IsNullOrWhiteSpace(OrderIdForPreAuthSales))
+                throw new ArgumentNullException("OrderIdForPreAuthSales");
             var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
-                                    .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
-                                    .Order(orderIdForPreAuthSales)
+                                    //.CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
+                                    .Order(OrderIdForPreAuthSales)
                                     .Amount(95)
                                     .Postauth(OrderRefNumberForPreaAuthSales);
 
@@ -354,15 +361,27 @@
         [TestMethod]
         public void PostauthSalesCancelTest()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+            while (string.IsNullOrWhiteSpace(OrderIdForPreAuthSales))
+            {
+                System.Threading.Thread.SpinWait(1000);
+            }
+            sw.Stop();
+            sw = null;
+            OrderIdForPreAuthSales = null;
+            OrderRefNumberForPreaAuthSales = null;
+            PreauthSalesTest();
             var _pay = new GarantiVPClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
-                                    .Order(orderId)
+                                    .Order(OrderIdForPreAuthSales)
                                     .Amount(95)
-                                    .PostauthCancel(OrderRefNumber);
+                                    .PostauthCancel(OrderRefNumberForPreaAuthSales);
 
             ValidateResult(_pay);
+            PreAuthCancelTestSuccess = true;
         }
 
         [TestMethod]

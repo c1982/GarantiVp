@@ -42,8 +42,8 @@
         public GarantiVPClient(bool test = false)
         {
             request = new GVPSRequest();
-
-            request.Version = "v0.01";
+            var AsmName = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName();
+            request.Version = AsmName.Name + " v" + AsmName.Version.Major.ToString() + "." + AsmName.Version.Minor.ToString();
 
             request.Terminal = new GVPSRequestTerminal();
             request.Terminal.ProvUserID = REQUEST_USER_PROVAUT;
@@ -366,13 +366,11 @@
             request.Transaction.Type = GVPSTransactionType.preauth;
             request.Transaction.MotoInd = GVPSMotoIndEnum.ECommerce;
             request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal;
-
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                     request.Terminal.ID +
                                                     request.Card.Number +
                                                     request.Transaction.Amount +
                                                     this._secureString).ToUpper();
-
             return Send();
         }
 
@@ -384,8 +382,14 @@
         public GVPSResponse Postauth(string RetrefNum)
         {
             request.Transaction.Type = GVPSTransactionType.postauth;
-            request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal ;
+            request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal;
             request.Transaction.OriginalRetrefNum = RetrefNum;
+
+            request.Terminal.HashData = GetSHA1(request.Order.OrderID +
+                                        request.Terminal.ID +
+                                        //request.Card.Number +
+                                        request.Transaction.Amount +
+                                        this._secureString).ToUpper();
 
             return Send();
         }
