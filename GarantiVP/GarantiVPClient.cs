@@ -387,7 +387,7 @@
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                         request.Terminal.ID +
-                                        //request.Card.Number +
+                                        ((request.Card == null) ? "" : request.Card.Number) +
                                         request.Transaction.Amount +
                                         this._secureString).ToUpper();
 
