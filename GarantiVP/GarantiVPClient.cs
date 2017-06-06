@@ -44,6 +44,8 @@
             request = new GVPSRequest();
             var AsmName = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName();
             request.Version = AsmName.Name + " v" + AsmName.Version.Major.ToString() + "." + AsmName.Version.Minor.ToString();
+            if(request.Version.Length > 16)
+             request.Version = "v" + AsmName.Version.Major.ToString() + "." + AsmName.Version.Minor.ToString();
 
             request.Terminal = new GVPSRequestTerminal();
             request.Terminal.ProvUserID = REQUEST_USER_PROVAUT;
@@ -246,7 +248,7 @@
             }
             if (!string.IsNullOrEmpty(comment.Text) && (comment.Text.Length > 20))
             {
-                throw new ArgumentException("Text field must be max 20 char.");
+                throw new ArgumentException("Comment text field must be max 20 char.");
             }
             request.Order.CommentList = request.Order.CommentList ?? new GVPSRequestCommentList();
             request.Order.CommentList.Comment = request.Order.CommentList.Comment ?? new GVPSRequestComment[] { };
