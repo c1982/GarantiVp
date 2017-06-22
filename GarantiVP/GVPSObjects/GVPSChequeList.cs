@@ -1,6 +1,6 @@
 ﻿namespace GarantiVP
 {
-    //TODO GVPSChequeList
+    //TODO Fill properties GVPSChequeList
     public class GVPSChequeList
     {
     }

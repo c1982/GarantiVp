@@ -2,6 +2,10 @@
 
 namespace GarantiVP
 {
+    //TODO Description
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlType(AnonymousType = true)]
     public class GVPSTransaction
     {
@@ -152,18 +156,21 @@ namespace GarantiVP
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public GVPSRewardList RewardList { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public GVPSChequeList ChequeList { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public GVPSMoneyCard MoneyCard { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
@@ -180,51 +187,54 @@ namespace GarantiVP
         [XmlElement]
         public string RetrefNum { get; set; }
 
-
+        //TODO Description
         /// <summary>
         /// The field where the confirmation code is returned.
         /// </summary>
         [XmlElement]
         public string AuthCode { get; set; }
 
-
+        //TODO Description
         /// <summary>
         /// The field where the transaction sequence number is returned.
         /// </summary>
         [XmlElement]
         public string SequenceNum { get; set; }
 
-
+        //TODO Description
         /// <summary>
         /// The area where the provision date is rotated.
         /// </summary>
         [XmlElement]
         public string ProvDate { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement]
         public GVPSTransactionResponse Response { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement("HostMsgList")]
         public GVPSHostMsgList HostMsgList { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement("RewardInqResult")]
         public GVPSRewardInqResult RewardInqResult { get; set; }
 
+        //TODO Description
         /// <summary>
         /// 
         /// </summary>
         [XmlElement("BatchNum")]
         public string BatchNum { get; set; }
-
 
         #endregion
     }

@@ -2,6 +2,7 @@
 
 namespace GarantiVP
 {
+    //TODO Description LANG=TR
     /// <summary>
     /// Store for order items.
     /// </summary>

@@ -12,7 +12,7 @@
     using System.Xml.Serialization;
     using System.Linq;
 
-    public class GarantiVPClient : IGarantiVPBuilder
+    public class GVPSClient : IGVPSBuilder
     {
         private GVPSRequest request;
 
@@ -39,7 +39,7 @@
             }
         }
 
-        public GarantiVPClient(bool test = false)
+        public GVPSClient(bool test = false)
         {
             request = new GVPSRequest();
             var AsmName = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName();
@@ -58,7 +58,7 @@
             this.Test(false);
         }
 
-        public IGarantiVPBuilder Server(string posUrl)
+        public IGVPSBuilder Server(string posUrl)
         {
             if (!String.IsNullOrEmpty(posUrl))
                 REQUEST_URL = posUrl;
@@ -66,7 +66,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder Test(bool isTest)
+        public IGVPSBuilder Test(bool isTest)
         {
             if (isTest)
             {
@@ -83,7 +83,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder Company(string terminalId, string MerchantID, string userID, string userPassword, string SubMerchantID = null)
+        public IGVPSBuilder Company(string terminalId, string MerchantID, string userID, string userPassword, string SubMerchantID = null)
         {
             request.Terminal.ID = terminalId; //isRequireZero(terminalId, 9);
             request.Terminal.MerchantID = MerchantID;
@@ -95,7 +95,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder Customer(string customerMail, string customerIP)
+        public IGVPSBuilder Customer(string customerMail, string customerIP)
         {
             request.Customer = request.Customer ?? new GVPSCustomer();
 
@@ -105,7 +105,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder CreditCard(string number, string cvv2, int month, int year)
+        public IGVPSBuilder CreditCard(string number, string cvv2, int month, int year)
         {
             request.Card = request.Card ?? new GVPSCard();
 
@@ -116,7 +116,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder Order(string orderID, string groupID = "")
+        public IGVPSBuilder Order(string orderID, string groupID = "")
         {
             request.Order = request.Order ?? new GVPSOrder();
             request.Order.OrderID = orderID;
@@ -124,7 +124,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder AddOrderAddress(GVPSAddressTypeEnum type, string city, string district, string addressText, string phone, string name, string lastName, string Company = null, string postalCode = null)
+        public IGVPSBuilder AddOrderAddress(GVPSAddressTypeEnum type, string city, string district, string addressText, string phone, string name, string lastName, string Company = null, string postalCode = null)
         {
             var address = new GVPSAddress();
             address.Type = type;
@@ -139,7 +139,7 @@
             return AddOrderAddress(address);
         }
 
-        public IGarantiVPBuilder AddOrderAddress(GVPSAddress address)
+        public IGVPSBuilder AddOrderAddress(GVPSAddress address)
         {
             if (address == null)
             {
@@ -167,7 +167,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder AddOrderItem(uint number, string productCode, string productId, double price, double quantity, string description = null, double totalAmount = 0.0)
+        public IGVPSBuilder AddOrderItem(uint number, string productCode, string productId, double price, double quantity, string description = null, double totalAmount = 0.0)
         {
             if ((number > 99) || (number < 1))
             {
@@ -193,7 +193,7 @@
             return AddOrderItem(item);
         }
 
-        public IGarantiVPBuilder AddOrderItem(GVPSItem item)
+        public IGVPSBuilder AddOrderItem(GVPSItem item)
         {
             if (item == null)
             {
@@ -224,7 +224,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder AddOrderComment(uint number, string text)
+        public IGVPSBuilder AddOrderComment(uint number, string text)
         {
             var comment = new GVPSComment();
             comment.Number = number;
@@ -232,7 +232,7 @@
             return AddOrderComment(comment);
         }
 
-        public IGarantiVPBuilder AddOrderComment(GVPSComment comment)
+        public IGVPSBuilder AddOrderComment(GVPSComment comment)
         {
             if (comment == null)
             {
@@ -263,7 +263,7 @@
             return this;
         }
 
-        public IGarantiVPBuilder Amount(double totalAmount, GVPSCurrencyCodeEnum currencyCode = GVPSCurrencyCodeEnum.TRL)
+        public IGVPSBuilder Amount(double totalAmount, GVPSCurrencyCodeEnum currencyCode = GVPSCurrencyCodeEnum.TRL)
         {
             request.Transaction.Amount = (ulong)(Math.Round(totalAmount, 2) * 100);
             request.Transaction.CurrencyCode = currencyCode;
@@ -271,21 +271,21 @@
             return this;
         }
 
-        public IGarantiVPBuilder Installment(int installment)
+        public IGVPSBuilder Installment(int installment)
         {
             request.Transaction.InstallmentCnt = installment <= 0 ? string.Empty : installment.ToString();
 
             return this;
         }
 
-        public IGarantiVPBuilder Delay(int day)
+        public IGVPSBuilder Delay(int day)
         {
             request.Transaction.DelayDayCount = day.ToString();
 
             return this;
         }
 
-        public IGarantiVPBuilder DownPaymentRate(int rate)
+        public IGVPSBuilder DownPaymentRate(int rate)
         {
             request.Transaction.DownPaymentRate = rate.ToString();
             return this;
@@ -605,9 +605,8 @@
             return ret;
         }
 
-        public GVPSResponse Sales3DEvaluatesResponseAndComplete(IDictionary<string, string[]> formDataDic)
+        public GVPSResponse Sales3DEvaluatesResponseAndGetProvision(IDictionary<string, string[]> formDataDic)
         {
-            var ret = new GVPSResponse();
             if (formDataDic == null)
                 throw new ArgumentNullException("postData");
             /*
@@ -620,7 +619,7 @@
                 procreturncode
                 *successurl
                 txninstallmentcount
-                ordergroupid
+                +ordergroupid
                 version
                 cardholder
                 refreshtime
@@ -644,16 +643,101 @@
                 terminalid
                 lang
              */
+            
+            //TODO Fill GVPSResponse from posted form data...
+            var ret = new GVPSResponse();
+
+            ret.Card = new GVPSCard();
+            ret.ChannelCode = "";
+
+            ret.Customer = new GVPSCustomer();
+            ret.Customer.EmailAddress = "";
+            ret.Customer.IPAddress = "";
+
+            ret.Mode = GVPSRequestModeEnum.Unspecified;
+
             ret.Order = new GVPSOrder();
-            ret.Order.OrderID = formDataDic["orderid"].FirstOrDefault();
+
+            ret.Order.AddressList = new GVPSAddressList();
+            ret.Order.AddressList.Address = new GVPSAddress[] { };
+
+            ret.Order.CommentList = new GVPSCommentList();
+            ret.Order.CommentList.Comment = new GVPSComment[] { };
+
+            ret.Order.Description = "";
+            ret.Order.GroupID = formDataDic["orderid"].FirstOrDefault();
+
+            ret.Order.ItemList = new GVPSItemList();
+            ret.Order.ItemList.Item = new GVPSItem[] { };
+
+            ret.Order.OrderID = formDataDic["ordergroupid"].FirstOrDefault();
+
+            ret.Order.Recurring = new GVPSRecurring();
+            ret.Order.Recurring.FrequencyInterval = 0;
+            ret.Order.Recurring.FrequencyType = GVPSFrequencyTypeEnum.Unspecified;
+            ret.Order.Recurring.PaymentList = new GVPSReccuringPaymentList();
+            ret.Order.Recurring.PaymentList.Payment = new GVPSReccurringPayment[] { };
+
             ret.RawRequest = "";
             ret.RawResponse = "";
+
+            ret.SettlementInq = new GVPSSettlementInq();
+
+            ret.Terminal = new GVPSTerminal();
+            ret.Terminal.HashData = "";
+            ret.Terminal.ID = "";
+            ret.Terminal.MerchantID = "";
+            ret.Terminal.ProvUserID = "";
+            ret.Terminal.SubMerchantID = "";
+            ret.Terminal.UserID = "";
+
             ret.Transaction = new GVPSTransaction();
+
+            ret.Transaction.Amount = 0;
             ret.Transaction.AuthCode = "";
             ret.Transaction.BatchNum = "";
+            ret.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Unspecified;
+
+            ret.Transaction.CepBank = new GVPSCepBank();
+            ret.Transaction.CepBank.GSMNumber = "";
+            ret.Transaction.CepBank.PaymentType = GVPSPaymentTypeEnum.Unspecified;
+
+            ret.Transaction.CepBankInq = new GVPSCepBankIng();
+            ret.Transaction.CepBankInq.GSMNumber = "";
+
+            ret.Transaction.ChequeList = new GVPSChequeList();
+            ret.Transaction.CommercialCardExtendedCredit = new GVPSCommercialCardExtendedCredit();
+            ret.Transaction.CommercialCardExtendedCredit.PaymentList = new GVPSTransactionPaymentList();
+            ret.Transaction.CommercialCardExtendedCredit.PaymentList.Payment = new GVPSTransactionPayment[] { };
+
+            ret.Transaction.CurrencyCode = GVPSCurrencyCodeEnum.Unspecified;
+            ret.Transaction.DelayDayCount = "";
+            ret.Transaction.DownPaymentRate = "";
+
+            ret.Transaction.GSMUnitInq = new GVPSGSMUnitInq();
+            ret.Transaction.GSMUnitInq.InstitutionCode = 0;
+            ret.Transaction.GSMUnitInq.Quantity = "";
+            ret.Transaction.GSMUnitInq.SubscriberCode = "";
+            ret.Transaction.GSMUnitSales = new GVPSGSMUnitSales();
+
+            ret.Transaction.GSMUnitSales.InstitutionCode = 0;
+            ret.Transaction.GSMUnitSales.Quantity = "";
+            ret.Transaction.GSMUnitSales.SubscriberCode = "";
+            ret.Transaction.GSMUnitSales.UnitID = "";
+
             ret.Transaction.HostMsgList = new GVPSHostMsgList();
             ret.Transaction.HostMsgList.HostMsg = new string[] {};
+
+            ret.Transaction.InstallmentCnt = "";
+
+            ret.Transaction.MoneyCard = new GVPSMoneyCard();
+
+            ret.Transaction.MotoInd = GVPSMotoIndEnum.Unspecified;
+
+            ret.Transaction.OriginalRetrefNum = "";
+
             ret.Transaction.ProvDate = "";
+
             ret.Transaction.Response = new GVPSTransactionResponse();
             ret.Transaction.Response.Code = "";
             ret.Transaction.Response.ErrorMsg = "";
@@ -661,15 +745,47 @@
             ret.Transaction.Response.ReasonCode = "";
             ret.Transaction.Response.Source = "";
             ret.Transaction.Response.SysErrMsg = "";
+
             ret.Transaction.RetrefNum = "";
+
             ret.Transaction.RewardInqResult = new GVPSRewardInqResult();
             ret.Transaction.RewardInqResult.ChequeList = new GVPSChequeList();
             //TODO ret.Transaction.RewardInqResult.ChequeList.
-            ret.Transaction.RewardInqResult.RewardList = new GVPSRewardList();
-            ret.Transaction.RewardInqResult.RewardList.Reward = new GVPSReward[] { new GVPSReward() { } }; //TODO fill GVPSResponseReward properties
+
+            ret.Transaction.RewardList = new GVPSRewardList();
+            ret.Transaction.RewardList.Reward = new GVPSReward[] { new GVPSReward() { } }; //TODO fill GVPSResponseReward properties
+
+            ret.Transaction.Secure3D = new GVPSSecure3D();
+            ret.Transaction.Secure3D.AuthenticationCode = "";
+            ret.Transaction.Secure3D.Md = GVPSMdStatusEnum.Undefined; 
+            ret.Transaction.Secure3D.SecurityLevel = 0;
+            ret.Transaction.Secure3D.TxnID = "";
+
             ret.Transaction.SequenceNum = "";
+
+            ret.Transaction.Type = GVPSTransactionTypeEnum.Unspecified;
+
+            ret.Transaction.UtilityPayment = new GVPSUtilityPayment();
+            ret.Transaction.UtilityPayment.Amount = 0;
+            ret.Transaction.UtilityPayment.InstitutionCode = 0;
+            ret.Transaction.UtilityPayment.InvoiceID = "";
+            ret.Transaction.UtilityPayment.SubscriberCode = "";
+
+            ret.Transaction.UtilityPaymentInq = new GVPSUtilityPaymentInq();
+            ret.Transaction.UtilityPaymentInq.InstitutionCode = 0;
+            ret.Transaction.UtilityPaymentInq.SubscriberCode = "";
+
+            ret.Transaction.UtilityPaymentVoidInq = new GVPSUtilityPaymentVoidInq();
+            ret.Transaction.UtilityPaymentVoidInq.InstitutionCode = 0;
+            ret.Transaction.UtilityPaymentVoidInq.SubscriberCode = "";
+
+            ret.Transaction.Verification = new GVPSVerification();
+            ret.Transaction.Verification.Identity = "";
+
             //string secure3dhash = ((string)postData["secure3dhash"]).FirstOrDefault();
             //string ValidateHashData = GetSHA1(strTerminalID + strOrderID + strAmount + strSuccessURL + strErrorURL + strType + strInstallmentCount + strStoreKey + SecurityData).ToUpper()
+
+            ret.Version = "";
             return ret;
         }
 

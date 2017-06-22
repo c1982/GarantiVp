@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace GarantiVP
 {
-    public static class GarantiVPHelpers
+    public static class GVPSHelpers
     {
         public static XmlElement AddInput(this XmlElement xe, string name, string val, string type = "hidden")
         {

@@ -13,6 +13,10 @@ namespace GarantiVP
         [XmlEnum("")]
         Unspecified,
 
+        //TODO Description
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlEnum("FBB")]
         FBB
     }

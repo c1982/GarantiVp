@@ -36,13 +36,12 @@ namespace GarantiVP
         [XmlElement]
         public string TxnID { get; set; }
 
-        //TODO create Md status enum
         /// <summary>
         /// Status information for processing
         /// <para>Size ? Byte alfanumeric</para>
         /// <para lang="tr">İşleme ait durum bilgisi</para> 
         /// </summary>
         [XmlElement]
-        public string Md { get; set; }
+        public GVPSMdStatusEnum Md { get; set; }
     }
 }

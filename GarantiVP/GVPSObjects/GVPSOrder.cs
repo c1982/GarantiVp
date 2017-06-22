@@ -2,6 +2,7 @@
 
 namespace GarantiVP
 {
+    //TODO Description LANG=TR
     /// <summary>
     /// Order information
     /// </summary>
@@ -59,8 +60,8 @@ namespace GarantiVP
         [XmlElement]
         public string Description { get; set; }
 
-        //TODO StartDate
-        //TODO EndDate
-        //TODO ListPageNum
+        //TODO Create property StartDate
+        //TODO Create property EndDate
+        //TODO Create property ListPageNum
     }
 }

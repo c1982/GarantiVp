@@ -5,13 +5,25 @@
     using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
-
+    
+    //TODO Description
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class GVPSPacked
     {
+        //TODO Description
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlIgnore()]
         public string RawRequest { get; set; }
 
+        //TODO Description
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlIgnore()]
         public string RawResponse { get; set; }
 

@@ -3,7 +3,8 @@
 namespace GarantiVP
 {
     /// <summary>
-    /// Terminal information
+    /// Terminal information 
+    /// <para lang="tr">Terminal bilgileri</para> 
     /// </summary>
     [XmlType(AnonymousType = true)]
     public class GVPSTerminal
@@ -14,6 +15,7 @@ namespace GarantiVP
         /// <value>
         /// <para>PROVAUT is used as a provisioning user.</para>
         /// <para>PROVRFN is the user used for cancellation and return processes.</para>
+        /// <para lang="tr">Provizyon kullanıcı kodu</para> 
         /// </value>
         /// </summary>
         [XmlElement]
@@ -54,6 +56,7 @@ namespace GarantiVP
 
         /// <summary>
         /// Sub merchant reference
+        /// <para lang="tr">Alt bayii referans kodu</para> 
         /// </summary>
         public string SubMerchantID { get; set; }
 

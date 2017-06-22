@@ -4,6 +4,7 @@ namespace GarantiVP
 {
     /// <summary>
     /// Customer information
+    /// <para lang="tr">Müşteri bilgileri</para> 
     /// </summary>
     [XmlType(AnonymousType = true)]
     public class GVPSCustomer

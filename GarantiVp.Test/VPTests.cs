@@ -145,7 +145,7 @@
         [TestMethod]
         public void SalesTest()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
@@ -161,7 +161,7 @@
         [TestMethod]
         public void SalesWithDetailsTest()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
@@ -180,7 +180,7 @@
         [TestMethod]
         public void Sales_USD_Test()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, UserID, UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -195,7 +195,7 @@
         [TestMethod]
         public void SalesWithInstallmentTest()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -211,7 +211,7 @@
         [TestMethod]
         public void Delay_SalesTest()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -227,7 +227,7 @@
         [TestMethod]
         public void DownPaymentRate_SalesTest()
         {
-            var _pay = new GarantiVPClient().Test(true)
+            var _pay = new GVPSClient().Test(true)
                                         .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                             .Customer(customer_email, customer_ipAddress)
                                             .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
@@ -262,7 +262,7 @@
                 throw new ArgumentNullException("orderIdForCancel");
             if (string.IsNullOrWhiteSpace(OrderIdForCancel))
                 throw new ArgumentNullException("OrderRefNumberForCancel");
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVRFN", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -286,7 +286,7 @@
             sw = null;
             if (string.IsNullOrWhiteSpace(OrderIdForRefund))
                 throw new ArgumentNullException("orderIdForRefund");
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -312,7 +312,7 @@
             sw = null;
             if (string.IsNullOrWhiteSpace(OrderRefNumberForRefundCancel))
                 throw new ArgumentNullException("OrderRefNumberForRefundCancel");
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -326,7 +326,7 @@
         [TestMethod]
         public void PreauthSalesTest()
         {
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -356,7 +356,7 @@
             PreauthSalesTest();
             if (string.IsNullOrWhiteSpace(OrderIdForPreAuthSales))
                 throw new ArgumentNullException("OrderIdForPreAuthSales");
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -383,7 +383,7 @@
             OrderIdForPreAuthSales = null;
             OrderRefNumberForPreaAuthSales = null;
             PreauthSalesTest();
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -400,7 +400,7 @@
         {
             var tc_kimlik_no = "000000000000";
 
-            var _pay = new GarantiVPClient()
+            var _pay = new GVPSClient()
                                     .Test(true)
                                     .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
                                     .Customer(customer_email, customer_ipAddress)
@@ -416,7 +416,7 @@
         public void Sale3DTest()
         {
             var IsFail = false;
-            var VPClient = new GarantiVPClient();
+            var VPClient = new GVPSClient();
             var Request = VPClient
                         .Test(true)
                         .Company(TerminalID_For_3D_FULL, MerchandID, UserID, UserPassword, SubMerchandID)

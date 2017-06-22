@@ -2,6 +2,10 @@
 
 namespace GarantiVP
 {
+    //TODO Description
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlType(AnonymousType = true)]
     public abstract class GVPSTransactionInqBase
     {
