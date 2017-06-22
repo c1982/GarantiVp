@@ -47,11 +47,11 @@
             if(request.Version.Length > 16)
              request.Version = "v" + AsmName.Version.Major.ToString() + "." + AsmName.Version.Minor.ToString();
 
-            request.Terminal = new GVPSRequestTerminal();
+            request.Terminal = new GVPSTerminal();
             request.Terminal.ProvUserID = REQUEST_USER_PROVAUT;
 
-            request.Transaction = new GVPSRequestTransaction();
-            request.Transaction.Type = GVPSTransactionType.sales;
+            request.Transaction = new GVPSTransaction();
+            request.Transaction.Type = GVPSTransactionTypeEnum.sales;
             request.Transaction.MotoInd = GVPSMotoIndEnum.ECommerce;
             request.Transaction.CurrencyCode = GVPSCurrencyCodeEnum.TRL;
 
@@ -66,9 +66,9 @@
             return this;
         }
 
-        public IGarantiVPBuilder Test(bool IsTest)
+        public IGarantiVPBuilder Test(bool isTest)
         {
-            if (IsTest)
+            if (isTest)
             {
                 this.REQUEST_URL = "https://sanalposprovtest.garanti.com.tr/VPServlet";
                 this.REQUEST_URL_FOR_3D = "https://sanalposprovtest.garanti.com.tr/servlet/gt3dengine";
@@ -97,7 +97,7 @@
 
         public IGarantiVPBuilder Customer(string customerMail, string customerIP)
         {
-            request.Customer = request.Customer ?? new GVPSRequestCustomer();
+            request.Customer = request.Customer ?? new GVPSCustomer();
 
             request.Customer.EmailAddress = customerMail;
             request.Customer.IPAddress = customerIP;
@@ -107,7 +107,7 @@
 
         public IGarantiVPBuilder CreditCard(string number, string cvv2, int month, int year)
         {
-            request.Card = request.Card ?? new GVPSRequestCard();
+            request.Card = request.Card ?? new GVPSCard();
 
             request.Card.Number = number;
             request.Card.CVV2 = cvv2.ToString();
@@ -118,7 +118,7 @@
 
         public IGarantiVPBuilder Order(string orderID, string groupID = "")
         {
-            request.Order = request.Order ?? new GVPSRequestOrder();
+            request.Order = request.Order ?? new GVPSOrder();
             request.Order.OrderID = orderID;
             request.Order.GroupID = groupID;
             return this;
@@ -126,7 +126,7 @@
 
         public IGarantiVPBuilder AddOrderAddress(GVPSAddressTypeEnum type, string city, string district, string addressText, string phone, string name, string lastName, string Company = null, string postalCode = null)
         {
-            var address = new GVPSRequestAddress();
+            var address = new GVPSAddress();
             address.Type = type;
             address.City = city;
             address.District = district;
@@ -139,7 +139,7 @@
             return AddOrderAddress(address);
         }
 
-        public IGarantiVPBuilder AddOrderAddress(GVPSRequestAddress address)
+        public IGarantiVPBuilder AddOrderAddress(GVPSAddress address)
         {
             if (address == null)
             {
@@ -153,9 +153,9 @@
             {
                 throw new ArgumentOutOfRangeException("Type", "The address type must be defined.");
             }
-            request.Order.AddressList = request.Order.AddressList ?? new GVPSRequestAddressList();
-            request.Order.AddressList.Address = request.Order.AddressList.Address ?? new GVPSRequestAddress[] { };
-            var Addresses = new List<GVPSRequestAddress>();
+            request.Order.AddressList = request.Order.AddressList ?? new GVPSAddressList();
+            request.Order.AddressList.Address = request.Order.AddressList.Address ?? new GVPSAddress[] { };
+            var Addresses = new List<GVPSAddress>();
             Addresses.AddRange(request.Order.AddressList.Address);
             if (Addresses.Where(e => e.Type.Equals(address.Type)).Count() > 0)
             {
@@ -182,7 +182,7 @@
                 throw new ArgumentOutOfRangeException("totalAmount", "Must be greater than 0");
             }
             totalAmount = (totalAmount == 0.0) ? (price * quantity) : totalAmount;
-            var item = new GVPSRequestItem();
+            var item = new GVPSItem();
             item.Description = description;
             item.Number = number;
             item.Price = (ulong)(Math.Round(price, 2) * 100);
@@ -193,7 +193,7 @@
             return AddOrderItem(item);
         }
 
-        public IGarantiVPBuilder AddOrderItem(GVPSRequestItem item)
+        public IGarantiVPBuilder AddOrderItem(GVPSItem item)
         {
             if (item == null)
             {
@@ -215,9 +215,9 @@
             {
                 throw new ArgumentOutOfRangeException("TotalAmount", "Must be greater than 0");
             }
-            request.Order.ItemList = request.Order.ItemList ?? new GVPSRequestItemList();
-            request.Order.ItemList.Item = request.Order.ItemList.Item ?? new GVPSRequestItem[] { };
-            var Items = new List<GVPSRequestItem>();
+            request.Order.ItemList = request.Order.ItemList ?? new GVPSItemList();
+            request.Order.ItemList.Item = request.Order.ItemList.Item ?? new GVPSItem[] { };
+            var Items = new List<GVPSItem>();
             Items.AddRange(request.Order.ItemList.Item);
             Items.Add(item);
             request.Order.ItemList.Item = Items.ToArray();
@@ -226,13 +226,13 @@
 
         public IGarantiVPBuilder AddOrderComment(uint number, string text)
         {
-            var comment = new GVPSRequestComment();
+            var comment = new GVPSComment();
             comment.Number = number;
             comment.Text = text;
             return AddOrderComment(comment);
         }
 
-        public IGarantiVPBuilder AddOrderComment(GVPSRequestComment comment)
+        public IGarantiVPBuilder AddOrderComment(GVPSComment comment)
         {
             if (comment == null)
             {
@@ -250,9 +250,9 @@
             {
                 throw new ArgumentException("Comment text field must be max 20 char.");
             }
-            request.Order.CommentList = request.Order.CommentList ?? new GVPSRequestCommentList();
-            request.Order.CommentList.Comment = request.Order.CommentList.Comment ?? new GVPSRequestComment[] { };
-            var Comments = new List<GVPSRequestComment>();
+            request.Order.CommentList = request.Order.CommentList ?? new GVPSCommentList();
+            request.Order.CommentList.Comment = request.Order.CommentList.Comment ?? new GVPSComment[] { };
+            var Comments = new List<GVPSComment>();
             Comments.AddRange(request.Order.CommentList.Comment);
             if(Comments.Where(e => e.Number.Equals(comment.Number)).Count() > 0)
             {
@@ -305,7 +305,7 @@
                 throw new ArgumentNullException("Transaction");
 
 
-            request.Transaction.Type = GVPSTransactionType.sales;
+            request.Transaction.Type = GVPSTransactionTypeEnum.sales;
             request.Transaction.CardholderPresentCode =  GVPSCardholderPresentCodeEnum.Normal;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
@@ -319,7 +319,7 @@
 
         public GVPSResponse Refund()
         {
-            request.Transaction.Type = GVPSTransactionType.refund;
+            request.Transaction.Type = GVPSTransactionTypeEnum.refund;
             request.Terminal.ProvUserID = REQUEST_USER_PROVRFN;
             request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal ;
             request.Transaction.MotoInd = GVPSMotoIndEnum.H;
@@ -332,12 +332,12 @@
             return Send();
         }
 
-        public GVPSResponse RefundCancel(string RefundRetrefNum)
+        public GVPSResponse RefundCancel(string refundRetrefNum)
         {
-            return Cancel(RefundRetrefNum);
+            return Cancel(refundRetrefNum);
         }
 
-        public GVPSResponse Cancel(string RetrefNum)
+        public GVPSResponse Cancel(string retrefNum)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -351,9 +351,9 @@
                 throw new ArgumentNullException("Terminal ID");
             if (request.Transaction == null)
                 throw new ArgumentNullException("Transaction");
-            request.Transaction.Type = GVPSTransactionType.@void;
+            request.Transaction.Type = GVPSTransactionTypeEnum.@void;
             request.Terminal.ProvUserID = REQUEST_USER_PROVRFN;
-            request.Transaction.OriginalRetrefNum = RetrefNum;
+            request.Transaction.OriginalRetrefNum = retrefNum;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                 request.Terminal.ID +
@@ -365,7 +365,7 @@
 
         public GVPSResponse Preauth()
         {
-            request.Transaction.Type = GVPSTransactionType.preauth;
+            request.Transaction.Type = GVPSTransactionTypeEnum.preauth;
             request.Transaction.MotoInd = GVPSMotoIndEnum.ECommerce;
             request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal;
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
@@ -376,16 +376,16 @@
             return Send();
         }
 
-        public GVPSResponse PostauthCancel(string RetrefNum)
+        public GVPSResponse PostauthCancel(string retrefNum)
         {
-            return Cancel(RetrefNum);
+            return Cancel(retrefNum);
         }
 
-        public GVPSResponse Postauth(string RetrefNum)
+        public GVPSResponse Postauth(string retrefNum)
         {
-            request.Transaction.Type = GVPSTransactionType.postauth;
+            request.Transaction.Type = GVPSTransactionTypeEnum.postauth;
             request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Normal;
-            request.Transaction.OriginalRetrefNum = RetrefNum;
+            request.Transaction.OriginalRetrefNum = retrefNum;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                         request.Terminal.ID +
@@ -398,9 +398,9 @@
 
         public GVPSResponse Verification(string TCKN)
         {
-            request.Transaction.Verification = request.Transaction.Verification ?? new GVPSRequestVerification();
+            request.Transaction.Verification = request.Transaction.Verification ?? new GVPSVerification();
 
-            request.Transaction.Type = GVPSTransactionType.identifyinq;
+            request.Transaction.Type = GVPSTransactionTypeEnum.identifyinq;
             request.Transaction.Verification.Identity = TCKN;
 
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
@@ -412,7 +412,7 @@
             return Send();
         }
 
-        public XmlElement Sale3DRequest(string StoreKeyFor3D, Uri SuccessUri, Uri FailUri)
+        public XmlElement Sale3DRequest(string storeKeyFor3D, Uri successUri, Uri failUri)
         {
             XmlElement ret = null;
             try
@@ -429,7 +429,7 @@
                     throw new ArgumentNullException("Transaction");
 
 
-                request.Transaction.Type = GVPSTransactionType.sales;
+                request.Transaction.Type = GVPSTransactionTypeEnum.sales;
                 request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Secure3D;
                 var OperationType = request.Transaction.Type.GetXmlEnumName();
                 if (string.IsNullOrWhiteSpace(OperationType))
@@ -437,11 +437,11 @@
                 var Secure3DHash = GetSHA1(request.Terminal.ID
                                                     + request.Order.OrderID
                                                     + request.Transaction.Amount
-                                                    + SuccessUri.ToString()
-                                                    + FailUri.ToString()
+                                                    + successUri.ToString()
+                                                    + failUri.ToString()
                                                     + OperationType
                                                     + (request.Transaction.InstallmentCnt ?? "")
-                                                    + StoreKeyFor3D
+                                                    + storeKeyFor3D
                                                     + this._secureString).ToUpper();
 
                 string RefreshTime = null;
@@ -504,8 +504,8 @@
                 //}
 
                 //Uri
-                xF.AddInput("successurl", SuccessUri.ToString());
-                xF.AddInput("errorurl", FailUri.ToString());
+                xF.AddInput("successurl", successUri.ToString());
+                xF.AddInput("errorurl", failUri.ToString());
 
                 //Customer
                 xF.AddInput("customeremailaddress", request.Customer.EmailAddress);
@@ -605,7 +605,75 @@
             return ret;
         }
 
- 
+        public GVPSResponse Sales3DEvaluatesResponseAndComplete(IDictionary<string, string[]> formDataDic)
+        {
+            var ret = new GVPSResponse();
+            if (formDataDic == null)
+                throw new ArgumentNullException("postData");
+            /*
+                mdstatus
+                mderrormessage
+                errmsg
+                clientid
+                oid
+                response
+                procreturncode
+                *successurl
+                txninstallmentcount
+                ordergroupid
+                version
+                cardholder
+                refreshtime
+                +orderid
+                txntype
+                txndelaydaycnt
+                terminalmerchantid
+                txnamount
+                terminaluserid
+                txndownpayrate
+                orderdescription
+                mode
+                txncurrencycode
+                txncardholderpresentcode
+                secure3dhash
+                txnmotoind
+                errorurl
+                customeremailaddress
+                customeripaddress
+                terminalprovuserid
+                terminalid
+                lang
+             */
+            ret.Order = new GVPSOrder();
+            ret.Order.OrderID = formDataDic["orderid"].FirstOrDefault();
+            ret.RawRequest = "";
+            ret.RawResponse = "";
+            ret.Transaction = new GVPSTransaction();
+            ret.Transaction.AuthCode = "";
+            ret.Transaction.BatchNum = "";
+            ret.Transaction.HostMsgList = new GVPSHostMsgList();
+            ret.Transaction.HostMsgList.HostMsg = new string[] {};
+            ret.Transaction.ProvDate = "";
+            ret.Transaction.Response = new GVPSTransactionResponse();
+            ret.Transaction.Response.Code = "";
+            ret.Transaction.Response.ErrorMsg = "";
+            ret.Transaction.Response.Message = "";
+            ret.Transaction.Response.ReasonCode = "";
+            ret.Transaction.Response.Source = "";
+            ret.Transaction.Response.SysErrMsg = "";
+            ret.Transaction.RetrefNum = "";
+            ret.Transaction.RewardInqResult = new GVPSRewardInqResult();
+            ret.Transaction.RewardInqResult.ChequeList = new GVPSChequeList();
+            //TODO ret.Transaction.RewardInqResult.ChequeList.
+            ret.Transaction.RewardInqResult.RewardList = new GVPSRewardList();
+            ret.Transaction.RewardInqResult.RewardList.Reward = new GVPSReward[] { new GVPSReward() { } }; //TODO fill GVPSResponseReward properties
+            ret.Transaction.SequenceNum = "";
+            //string secure3dhash = ((string)postData["secure3dhash"]).FirstOrDefault();
+            //string ValidateHashData = GetSHA1(strTerminalID + strOrderID + strAmount + strSuccessURL + strErrorURL + strType + strInstallmentCount + strStoreKey + SecurityData).ToUpper()
+            return ret;
+        }
+
+
         #region Privates
         private string isRequireZero(int time)
         {
@@ -739,9 +807,9 @@
             }
             catch (Exception ex)
             {
-                gvpResponse.Transaction = new GVPSResponseTransaction();
-                gvpResponse.Order = new GVPSResponseOrder();
-                gvpResponse.Transaction.Response = new GVPSResponseTransactionResponse();
+                gvpResponse.Transaction = new GVPSTransaction();
+                gvpResponse.Order = new GVPSOrder();
+                gvpResponse.Transaction.Response = new GVPSTransactionResponse();
 
                 gvpResponse.Transaction.Response.Code = "99";
                 gvpResponse.Transaction.Response.Message = ex.Message;

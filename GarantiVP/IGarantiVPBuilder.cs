@@ -71,7 +71,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderAddress(GVPSRequestAddress address);
+        IGarantiVPBuilder AddOrderAddress(GVPSAddress address);
 
         /// <summary>
         /// Siparişe ait ürün / hizmet detayı eklenmesini sağlar.
@@ -91,7 +91,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderItem(GVPSRequestItem item);
+        IGarantiVPBuilder AddOrderItem(GVPSItem item);
 
         /// <summary>
         /// Raporlama ekranlarında kullanılmak üzere özel açıklama eklemek için kullanılır.
@@ -106,7 +106,7 @@ namespace GarantiVP
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        IGarantiVPBuilder AddOrderComment(GVPSRequestComment comment);
+        IGarantiVPBuilder AddOrderComment(GVPSComment comment);
 
         /// <summary>
         /// Kredi Kartından çekilecek tutar

@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using Microsoft.Owin;
     using System.Collections.Generic;
+    using System.Linq;
 
     [TestClass]
     public class VPTests
@@ -72,52 +73,56 @@
         private const string customer_email = "eticaret@garanti.com.tr";
         private const string customer_ipAddress = "192.168.0.1";
 
-        private void ValidateResult(GVPSResponse _pay)
+        private void ValidateResult(GVPSResponse result)
         {
-            Debug.WriteLine("Request: " + _pay.RawRequest);
-            Debug.WriteLine("Response: " + _pay.RawResponse);
-
-            Debug.WriteLine("Message: " + _pay.Transaction.Response.Message);
-            Debug.WriteLine("ErrorMsg: " + _pay.Transaction.Response.ErrorMsg);
-            Debug.WriteLine("SysErrMsg: " + _pay.Transaction.Response.SysErrMsg);
-
-            Debug.WriteLine("OrderID: " + ((_pay.Order == null) ? "" : _pay.Order.OrderID));
-            Debug.WriteLine("RetrefNum: " + _pay.Transaction.RetrefNum);
-            Debug.WriteLine("AuthCode: " + _pay.Transaction.AuthCode);
-            Debug.WriteLine("SequenceNum: " + _pay.Transaction.SequenceNum);
-            Debug.WriteLine("BatchNum: " + _pay.Transaction.BatchNum);
-            if ((_pay.Transaction.HostMsgList != null) && (_pay.Transaction.HostMsgList.HostMsg != null))
+            Assert.IsNotNull(result);
+            if(result != null)
             {
-                foreach (string item in _pay.Transaction.HostMsgList.HostMsg)
+                Debug.WriteLine("Request: " + result.RawRequest);
+                Debug.WriteLine("Response: " + result.RawResponse);
+
+                Debug.WriteLine("Message: " + result.Transaction.Response.Message);
+                Debug.WriteLine("ErrorMsg: " + result.Transaction.Response.ErrorMsg);
+                Debug.WriteLine("SysErrMsg: " + result.Transaction.Response.SysErrMsg);
+
+                Debug.WriteLine("OrderID: " + ((result.Order == null) ? "" : result.Order.OrderID));
+                Debug.WriteLine("RetrefNum: " + result.Transaction.RetrefNum);
+                Debug.WriteLine("AuthCode: " + result.Transaction.AuthCode);
+                Debug.WriteLine("SequenceNum: " + result.Transaction.SequenceNum);
+                Debug.WriteLine("BatchNum: " + result.Transaction.BatchNum);
+                if ((result.Transaction.HostMsgList != null) && (result.Transaction.HostMsgList.HostMsg != null))
                 {
-                    Debug.WriteLine("Bank message: " + item);
-                }
-            }
-            var ProvDate = _pay.Transaction.ProvDate;
-            object ProvisionDate = null;
-            if (!string.IsNullOrWhiteSpace(ProvDate))
-            { 
-                ProvisionDate = new DateTime(int.Parse(ProvDate.Substring(0, 4)), int.Parse(ProvDate.Substring(4, 2)), int.Parse(ProvDate.Substring(6, 2)), int.Parse(ProvDate.Substring(9, 2)), int.Parse(ProvDate.Substring(12, 2)), int.Parse(ProvDate.Substring(15, 2)));
-            }
-            Debug.WriteLine("Provision date: " + ProvisionDate);
-            if (_pay.Transaction.RewardInqResult != null)
-            {
-                if (_pay.Transaction.RewardInqResult.ChequeList != null)
-                {
-                    //TODO _pay.Transaction.RewardInqResult.ChequeList childs
-                }
-                if ((_pay.Transaction.RewardInqResult.RewardList != null) && (_pay.Transaction.RewardInqResult.RewardList.Reward != null))
-                {
-                    foreach (GVPSResponseReward item in _pay.Transaction.RewardInqResult.RewardList.Reward)
+                    foreach (string item in result.Transaction.HostMsgList.HostMsg)
                     {
-                        Debug.WriteLine("Reward\n Type: {0}\n Used: {1}\n Earned:{2}", item.Type, (item.TotalAmount / 100), (item.LastTxnGainAmount / 100));
+                        Debug.WriteLine("Bank message: " + item);
                     }
                 }
+                var ProvDate = result.Transaction.ProvDate;
+                object ProvisionDate = null;
+                if (!string.IsNullOrWhiteSpace(ProvDate))
+                {
+                    ProvisionDate = new DateTime(int.Parse(ProvDate.Substring(0, 4)), int.Parse(ProvDate.Substring(4, 2)), int.Parse(ProvDate.Substring(6, 2)), int.Parse(ProvDate.Substring(9, 2)), int.Parse(ProvDate.Substring(12, 2)), int.Parse(ProvDate.Substring(15, 2)));
+                }
+                Debug.WriteLine("Provision date: " + ProvisionDate);
+                if (result.Transaction.RewardInqResult != null)
+                {
+                    if (result.Transaction.RewardInqResult.ChequeList != null)
+                    {
+                        //TODO _pay.Transaction.RewardInqResult.ChequeList childs
+                    }
+                    if ((result.Transaction.RewardInqResult.RewardList != null) && (result.Transaction.RewardInqResult.RewardList.Reward != null))
+                    {
+                        foreach (GVPSReward item in result.Transaction.RewardInqResult.RewardList.Reward)
+                        {
+                            Debug.WriteLine("Reward\n Type: {0}\n Used: {1}\n Earned:{2}", item.Type, (item.TotalAmount / 100), (item.LastTxnGainAmount / 100));
+                        }
+                    }
 
+                }
+
+                Assert.AreEqual("00", result.Transaction.Response.Code);
+                Assert.AreEqual("Approved", result.Transaction.Response.Message);
             }
-
-            Assert.AreEqual("00", _pay.Transaction.Response.Code);
-            Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
         }
 
 
@@ -427,31 +432,14 @@
                     con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
                     con.Response.Write(SelfHost.CreateWebContent(HTML, "Sales 3D test page"));
                 })
-                .Listen(HostUriSuccessPath, (IOwinContext con) => {
+                .Listen(HostUriSuccessPath, async (IOwinContext con) =>
+                {
                     con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
                     var ResponseHTML = "";
-                    ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
-                    foreach (var item in con.Request.Headers)
-                    {
-                        ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
-                    }
-                    if (con.Request.Method == "POST")
-                    {
-                        var formData = con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>;
-                        foreach (var item in formData)
-                        {
-                            ResponseHTML += string.Format("\n</br><strong>{0}</strong>\n</br>{1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
-                        }
-                    }
-                    con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D SUCCESS page"));
-                })
-                .Listen(HostUriFailPath, async (IOwinContext con) =>
-                {
-                    IsFail = true;
                     try
                     {
-                        con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
-                        var ResponseHTML = "";
+                        var formData = await con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>;
+                        var formDataDic = formData.ToDictionary(k => k.Key, e => e.Value);
                         ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
                         foreach (var item in con.Request.Headers)
                         {
@@ -459,22 +447,48 @@
                         }
                         if (con.Request.Method == "POST")
                         {
-                            var formData = (await con.Request.ReadFormAsync()) as IEnumerable<KeyValuePair<string, string[]>>;
-                            foreach (var item in formData)
-                            {
-                                ResponseHTML += string.Format("\n</br><strong>{0}</strong>\n</br>{1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
-                            }
-                            //VPClient.Sales3DEvaluatesResponseAndComplete(formData)
+                            ResponseHTML += SelfHost.CreateWebContent(formDataDic);
+                            var Result = VPClient.Sales3DEvaluatesResponseAndComplete(formDataDic);
+                            ValidateResult(Result);
+                        }
+                        con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D SUCCESS page"));
+
+                    }
+                    catch (Exception exSuccess)
+                    {
+                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exSuccess.ToString() + "</pre>", "Sales 3D INTERNAL ERROR SUCCESS page"));
+                        throw;
+                    }
+                })
+                .Listen(HostUriFailPath, async (IOwinContext con) =>
+                {
+                    IsFail = true;
+                    var ResponseHTML = "";
+                    try
+                    {
+                        var formData = (await con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>);
+                        var formDataDic = formData.ToDictionary(k => k.Key, e => e.Value);
+                        con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
+                        ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
+                        foreach (var item in con.Request.Headers)
+                        {
+                            ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", string.Join("\n", item.Value))).Replace("\n", "</br>"));
+                        }
+                        if (con.Request.Method == "POST")
+                        {
+                            ResponseHTML += SelfHost.CreateWebContent(formDataDic);
+                            var Result = VPClient.Sales3DEvaluatesResponseAndComplete(formDataDic);
+                            ValidateResult(Result);
                         }
                         con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D FAIL page"));
                     }
                     catch (Exception exFail)
                     {
-                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>", "Sales 3D INTERNAL FAIL page"));
+                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>", "Sales 3D INTERNAL ERROR FAIL page"));
                         throw;
                     }
                 })
-                .OpenWebClient("/", false)
+                //.OpenWebClient("/", false)
                 .OpenWebClient("/Sales3DTest")
                 ;
 

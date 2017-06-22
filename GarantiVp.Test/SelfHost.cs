@@ -155,22 +155,47 @@ namespace GarantiVp.Test
                 + " <head>\n"
                 + "     <title>" + System.Net.WebUtility.HtmlEncode(PageTitle) + "</title>\n"
                 + "     <meta charset=\"UTF-8\">\n"
-                + "     <style type=\"text/css\" >\n"
-                + "         *, html, body\n"
-                + "         {\n"
-                + "             margin:0;\n"
-                + "             padding:0;\n"
-                + "             font-family:Tahoma;\n"
-                + "             font-size:10pt;\n"
-                + "         }\n"
-                + "     </style>\n"
+                + "     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+                + "     <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">"
+                + "     <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css\" integrity=\"sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp\" crossorigin=\"anonymous\">"
+                + "     <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\" integrity=\"sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa\" crossorigin=\"anonymous\"></script>"
+                //+ "     <style type=\"text/css\" >\n"
+                //+ "         *, html, body\n"
+                //+ "         {\n"
+                //+ "             margin:0;\n"
+                //+ "             padding:0;\n"
+                //+ "             font-family:Tahoma;\n"
+                //+ "             font-size:10pt;\n"
+                //+ "         }\n"
+                //+ "     </style>\n"
                 + " </head>\n"
                 + " <body style=\"background:white;padding:20px;\">\n"
                 + "         <h1 style=\"font-weight:normal;font-size:18pt;margin-top:5pt;border-bottom:1px solid gray;\">" + System.Net.WebUtility.HtmlEncode(PageTitle) + "</h1>\n"
-                + "         " + HTMLContent + "\n"
+                + "         <div class=\"contaioner\">\n" 
+                + HTMLContent + "\n"
+                + "         </div>\n"
                 + " </body>\n"
                 + "</html>\n";
             return HTML;
+        }
+
+        public static string CreateWebContent(IDictionary<string, string[]> formDataDic)
+        {
+            var ret = "";
+            if (formDataDic == null)
+                throw new ArgumentNullException("formData");
+            foreach (var item in formDataDic)
+            {
+                ret += "\n<div class=\"row\">";
+                ret += "\n<div class=\"col-md-2\">";
+                ret += System.Net.WebUtility.HtmlEncode(item.Key);
+                ret += "\n</div>";
+                ret += "\n<div class=\"col-md-10\">";
+                ret += System.Net.WebUtility.HtmlEncode(string.Format("{0}", string.Join("\n", item.Value))).Replace("\n", "</br>");
+                ret += "\n</div>";
+                ret += "\n</div>";
+            }
+            return ret;
         }
     }
 }
