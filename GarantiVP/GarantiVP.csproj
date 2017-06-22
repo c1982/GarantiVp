@@ -40,10 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GarantiVPClient.cs" />
+    <Compile Include="GarantiVPHelpers.cs" />
+    <Compile Include="GVPS3DForm.cs" />
+    <Compile Include="GVPS3DInput.cs" />
     <Compile Include="GVPSAddressTypeEnum.cs" />
     <Compile Include="GVPSFrequencyTypeEnum.cs" />
     <Compile Include="GVPSPaymentTypeEnum.cs" />
     <Compile Include="GVPSRecurringTypeEnum.cs" />
+    <Compile Include="GVPSRequesReward.cs" />
     <Compile Include="GVPSRequestCard.cs" />
     <Compile Include="GVPSRequestCepBank.cs" />
     <Compile Include="GVPSRequestCepBankIng.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace GarantiVP
 {
@@ -39,7 +40,6 @@ namespace GarantiVP
         /// <param name="customerIP">Müşterinin IP adresi</param>
         /// <returns></returns>
         IGarantiVPBuilder Customer(string customerMail, string customerIP);
-
 
         IGarantiVPBuilder CreditCard(string number, string cvv2, int month, int year);
 
@@ -189,5 +189,11 @@ namespace GarantiVP
         /// <param name="TCKN">TC Kimlik No</param>
         /// <returns></returns>
         GVPSResponse Verification(string TCKN);
+
+        /// <summary>
+        /// 3D Secure destekli satış
+        /// </summary>
+        /// <returns></returns>
+        XmlElement Sale3DRequest(string StoreKeyFor3D, Uri SuccessUri, Uri FailUri);
     }
 }

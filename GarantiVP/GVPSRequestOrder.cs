@@ -51,7 +51,14 @@ namespace GarantiVP
         /// </summary>
         [XmlElement]
         public GVPSRequestRecurring Recurring { get; set; }
-        
+
+        /// <summary>
+        /// Description
+        /// <para lang="tr">Açıklama</para> 
+        /// </summary>
+        [XmlElement]
+        public string Description { get; set; }
+
         //TODO StartDate
         //TODO EndDate
         //TODO ListPageNum

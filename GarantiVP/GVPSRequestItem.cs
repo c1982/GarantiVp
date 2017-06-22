@@ -42,7 +42,7 @@ namespace GarantiVP
         /// <para>Size numeric 19 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public ulong Prince { get; set; }
+        public ulong Price { get; set; }
 
         /// <summary>
         /// Total amount

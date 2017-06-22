@@ -4,6 +4,8 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using GarantiVP;
     using System.Diagnostics;
+    using Microsoft.Owin;
+    using System.Collections.Generic;
 
     [TestClass]
     public class VPTests
@@ -24,7 +26,11 @@
         private const string ProvUserID_For_3D = "GARANTI";
         private const string ProvUserPassword = "123qweASD";
 
-        private const string Securekey = "12345678";
+        //3D Secure configs
+        private const string StoreKeyFor3D = "1234578";
+        private Uri HostUri = new Uri("http://localhost:5000");
+        private string HostUriSuccessPath = "/success";
+        private string HostUriFailPath = "/fail";
 
         //GARANTI VPos test configuration
         private string TerminalID = TerminalID_For_3D;
@@ -400,5 +406,142 @@
 
             ValidateResult(_pay);
         }
+
+        [TestMethod]
+        public void Sale3DTest()
+        {
+            var IsFail = false;
+            var VPClient = new GarantiVPClient();
+            var Request = VPClient
+                        .Test(true)
+                        .Company(TerminalID_For_3D_FULL, MerchandID, UserID, UserPassword, SubMerchandID)
+                        .Customer(customer_email, customer_ipAddress)
+                        .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
+                        .Order(Guid.NewGuid().ToString("N"))
+                        .Amount(1234.567, GVPSCurrencyCodeEnum.TRL)
+                        .Sale3DRequest(StoreKeyFor3D, new Uri(HostUri, HostUriSuccessPath), new Uri(HostUri, HostUriFailPath));
+            Request.AddInput("", "Gönder", "submit");
+            var HTML = Request.OuterXml;
+            var i = SelfHost.Run(HostUri.ToString())
+                .Listen("/Sales3DTest", (IOwinContext con) => {
+                    con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
+                    con.Response.Write(SelfHost.CreateWebContent(HTML, "Sales 3D test page"));
+                })
+                .Listen(HostUriSuccessPath, (IOwinContext con) => {
+                    con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
+                    var ResponseHTML = "";
+                    ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
+                    foreach (var item in con.Request.Headers)
+                    {
+                        ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
+                    }
+                    if (con.Request.Method == "POST")
+                    {
+                        var formData = con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>;
+                        foreach (var item in formData)
+                        {
+                            ResponseHTML += string.Format("\n</br><strong>{0}</strong>\n</br>{1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
+                        }
+                    }
+                    con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D SUCCESS page"));
+                })
+                .Listen(HostUriFailPath, async (IOwinContext con) =>
+                {
+                    IsFail = true;
+                    try
+                    {
+                        con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
+                        var ResponseHTML = "";
+                        ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
+                        foreach (var item in con.Request.Headers)
+                        {
+                            ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
+                        }
+                        if (con.Request.Method == "POST")
+                        {
+                            var formData = (await con.Request.ReadFormAsync()) as IEnumerable<KeyValuePair<string, string[]>>;
+                            foreach (var item in formData)
+                            {
+                                ResponseHTML += string.Format("\n</br><strong>{0}</strong>\n</br>{1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
+                            }
+                            //VPClient.Sales3DEvaluatesResponseAndComplete(formData)
+                        }
+                        con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D FAIL page"));
+                    }
+                    catch (Exception exFail)
+                    {
+                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>", "Sales 3D INTERNAL FAIL page"));
+                        throw;
+                    }
+                })
+                .OpenWebClient("/", false)
+                .OpenWebClient("/Sales3DTest")
+                ;
+
+            Assert.IsFalse(IsFail);
+            //OpenWebUI(HTML, "Sales3DTest");
+            //var _pay = new GarantiVPClient()
+            //            .Test(true)
+            //            .Sales3DComplete(Request, Response);
+            //ValidateResult(_pay);
+            //OrderIdForCancel = _pay.Order.OrderID;
+            //OrderRefNumberForCancel = _pay.Transaction.RetrefNum;
+        }
+
+        public string OpenWebUI(string HTMLContent, string PageTitle = "Local test content")
+        {
+            string ret = null;
+            var wf = new System.Windows.Forms.Form();
+            var wb = new System.Windows.Forms.WebBrowser();
+            wb.Name = "wb";
+            wb.Dock = System.Windows.Forms.DockStyle.Fill;
+            wf.Controls.Add(wb);
+            var HTML = "<!DOCTYPE>\n"
+                + "<html>\n"
+                + " <head>\n"
+                + "     <title>" + System.Net.WebUtility.HtmlEncode(PageTitle) + "</title>\n"
+                + "     <style type=\"text/css\" >\n"
+                + "         *, html, body\n"
+                + "         {\n"
+                + "             margin:0;\n"
+                + "             padding:0;\n"
+                + "             font-family:Tahoma;\n"
+                + "             font-size:10pt;\n"
+                + "         }\n"
+                + "     </style>\n"
+                + " </head>\n"
+                + " <body style=\"background:white;padding:20px;\">\n"
+                + "         <h1 style=\"font-weight:normal;font-size:18pt;margin-top:5pt;border-bottom:1px solid gray;\">" + System.Net.WebUtility.HtmlEncode(PageTitle) + "</h1>\n"
+                + "         " + HTMLContent + "\n"
+                + " </body>\n"
+                + "</html>\n";
+            wf.Load += (object sender, EventArgs e) =>
+            {
+                wb.DocumentText = HTML;
+                wf.Focus();
+            };
+            wf.ShowDialog();
+            return ret;
+        }
+
+        private string ToOuterXML<T>(T TModel)
+        {
+            string xmlData = String.Empty;
+
+            System.Xml.Serialization.XmlSerializerNamespaces EmptyNameSpace = new System.Xml.Serialization.XmlSerializerNamespaces();
+            EmptyNameSpace.Add("", "");
+
+            var xmlSerializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
+            var memoryStream = new System.IO.MemoryStream();
+            var xmlWriter = new System.Xml.XmlTextWriter(memoryStream, System.Text.Encoding.Default);
+            xmlSerializer.Serialize(xmlWriter, TModel, EmptyNameSpace);
+
+            memoryStream = (System.IO.MemoryStream)xmlWriter.BaseStream;
+            //xmlData = UTF8ByteArrayToString(memoryStream.ToArray());
+            xmlData = System.Text.Encoding.Default.GetString(memoryStream.ToArray());
+
+            return xmlData;
+        }
+
     }
 }

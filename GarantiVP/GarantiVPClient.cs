@@ -185,7 +185,7 @@
             var item = new GVPSRequestItem();
             item.Description = description;
             item.Number = number;
-            item.Prince = (ulong)(Math.Round(price, 2) * 100);
+            item.Price = (ulong)(Math.Round(price, 2) * 100);
             item.ProductCode = productCode ;
             item.ProductID = productId;
             item.Quantity = (ulong)(Math.Round(quantity, 2) * 100);
@@ -412,6 +412,200 @@
             return Send();
         }
 
+        public XmlElement Sale3DRequest(string StoreKeyFor3D, Uri SuccessUri, Uri FailUri)
+        {
+            XmlElement ret = null;
+            try
+            {
+                if (request == null)
+                    throw new ArgumentNullException("request");
+                if ((request.Order == null) || string.IsNullOrWhiteSpace(request.Order.OrderID))
+                    throw new ArgumentNullException("Order ID");
+                if ((request.Card == null) || string.IsNullOrWhiteSpace(request.Card.Number))
+                    throw new ArgumentNullException("Card Number");
+                if ((request.Terminal == null) || string.IsNullOrWhiteSpace(request.Terminal.ID))
+                    throw new ArgumentNullException("Terminal ID");
+                if (request.Transaction == null)
+                    throw new ArgumentNullException("Transaction");
+
+
+                request.Transaction.Type = GVPSTransactionType.sales;
+                request.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Secure3D;
+                var OperationType = request.Transaction.Type.GetXmlEnumName();
+                if (string.IsNullOrWhiteSpace(OperationType))
+                    throw new ArgumentException("Transaction type not know; " + request.Transaction.Type.ToString());
+                var Secure3DHash = GetSHA1(request.Terminal.ID
+                                                    + request.Order.OrderID
+                                                    + request.Transaction.Amount
+                                                    + SuccessUri.ToString()
+                                                    + FailUri.ToString()
+                                                    + OperationType
+                                                    + (request.Transaction.InstallmentCnt ?? "")
+                                                    + StoreKeyFor3D
+                                                    + this._secureString).ToUpper();
+
+                string RefreshTime = null;
+                string Lang = null;
+
+                var xDoc = new XmlDocument();
+                var xF = xDoc.CreateElement("form");
+                xF.SetAttribute("method", "POST");
+                xF.SetAttribute("action", REQUEST_URL_FOR_3D);
+
+                //Root
+                xF.AddInput("mode", request.Mode.GetXmlEnumName()); //Required
+                xF.AddInput("version", request.Version); //Required
+                xF.AddInput("secure3dhash", Secure3DHash); //Required
+                xF.AddInput("refreshtime", RefreshTime); //Required
+                xF.AddInput("lang", Lang); //Required
+
+                //Terminal information
+                xF.AddInput("terminalprovuserid", request.Terminal.ProvUserID);
+                xF.AddInput("terminaluserid", request.Terminal.UserID); //Required
+                xF.AddInput("terminalmerchantid", request.Terminal.MerchantID); //Required
+                xF.AddInput("terminalid", request.Terminal.ID); //Required
+
+                //Transaction information
+                xF.AddInput("txntype", request.Transaction.Type.GetXmlEnumName()); //Required
+                xF.AddInput("txnamount", request.Transaction.Amount.ToString()); //Required
+                xF.AddInput("txncurrencycode", request.Transaction.CurrencyCode.GetXmlEnumName()); //Required
+                xF.AddInput("txninstallmentcount", request.Transaction.InstallmentCnt);
+                xF.AddInput("txndownpayrate", request.Transaction.DownPaymentRate);
+                xF.AddInput("txndelaydaycnt", request.Transaction.DelayDayCount);
+                xF.AddInput("txncardholderpresentcode", request.Transaction.CardholderPresentCode.GetXmlEnumName());
+                xF.AddInput("txnmotoind", request.Transaction.MotoInd.GetXmlEnumName()); //Required
+
+                //TODO Transaction rewards
+                //if ((request.Transaction != null) && (request.Transaction.RewardList != null) && (request.Transaction.RewardList.Reward != null))
+                //{
+                //    var itemCount = request.Transaction.RewardList.Reward.Count();
+                //    xF.AddInput("txnrewardcount", itemCount.ToString());
+                //    foreach (var item in request.Transaction.RewardList.Reward)
+                //    {
+                //        xF.AddInput("txnrewardtype" + itemCount.ToString(), item.Type);
+                //        xF.AddInput("txnrewardgainedamount" + itemCount.ToString(), item.GainedAmount);
+                //        xF.AddInput("txnrewardusedamount" + itemCount.ToString(), item.UsedAmount);
+                //    }
+                //}
+
+                //TODO Transaction cheques
+                //if ((request.Transaction != null) && (request.Transaction.ChequeList != null) && (request.Transaction.ChequeList.Cheque != null))
+                //{
+                //    var itemCount = request.Transaction.ChequeList.Cheque.Count();
+                //    xF.AddInput("txnchequecount", itemCount.ToString());
+                //    foreach (var item in request.Transaction.ChequeList.Cheque)
+                //    {
+                //        xF.AddInput("txnchequetype" + itemCount.ToString(), item.Type);
+                //        xF.AddInput("txnchequeamount" + itemCount.ToString(), item.Amount);
+                //        xF.AddInput("txnchequebitmap" + itemCount.ToString(), item.Bitmap);
+                //        xF.AddInput("txnchequeid" + itemCount.ToString(), item.ID);
+                //        xF.AddInput("txnchequecount" + itemCount.ToString(), item.Count);
+                //    }
+                //}
+
+                //Uri
+                xF.AddInput("successurl", SuccessUri.ToString());
+                xF.AddInput("errorurl", FailUri.ToString());
+
+                //Customer
+                xF.AddInput("customeremailaddress", request.Customer.EmailAddress);
+                xF.AddInput("customeripaddress", request.Customer.IPAddress.ToString());
+
+                //Card
+                xF.AddInput("Cardnumber", request.Card.Number); //Required
+                xF.AddInput("cardcvv2", request.Card.CVV2); //Required
+                xF.AddInput("cardexpiredatemonth", request.Card.ExpireDate.Substring(0, 2)); //Required
+                xF.AddInput("cardexpiredateyear", request.Card.ExpireDate.Substring(2, 2)); //Required
+                xF.AddInput("cardholder", request.Card.CardHolder);
+
+
+                //Order information
+                xF.AddInput("orderid", request.Order.OrderID); //Required
+                xF.AddInput("ordergroupid", request.Order.GroupID);
+                xF.AddInput("orderdescription", request.Order.Description);
+
+                //Order items
+                if ((request.Order != null) && (request.Order.ItemList != null) && (request.Order.ItemList.Item != null))
+                {
+                    var itemCount = request.Order.ItemList.Item.Count();
+                    xF.AddInput("orderitemcount", itemCount.ToString());
+                    foreach (var item in request.Order.ItemList.Item)
+                    {
+                        xF.AddInput("orderitemnumber" + itemCount.ToString(), item.Number.ToString());
+                        xF.AddInput("orderitemproductid" + itemCount.ToString(), item.ProductID);
+                        xF.AddInput("orderitemproductcode" + itemCount.ToString(), item.ProductCode);
+                        xF.AddInput("orderitemquantity" + itemCount.ToString(), item.Quantity.ToString());
+                        xF.AddInput("orderitemprice" + itemCount.ToString(), item.Price.ToString());
+                        xF.AddInput("orderitemtotalamount" + itemCount.ToString(), item.TotalAmount.ToString());
+                        xF.AddInput("orderitemdescription" + itemCount.ToString(), item.Description);
+                    }
+                }
+
+                //Order comments
+                if ((request.Order != null) && (request.Order.CommentList != null) && (request.Order.CommentList.Comment!= null))
+                {
+                    var itemCount = request.Order.CommentList.Comment.Count();
+                    xF.AddInput("orderaddresscount", itemCount.ToString());
+                    foreach (var item in request.Order.CommentList.Comment)
+                    {
+                        xF.AddInput("ordercommentnumber" + itemCount.ToString(), item.Number.ToString());
+                        xF.AddInput("ordercommenttext" + itemCount.ToString(), item.Text);
+                    }
+                }
+
+                //Order addresses
+                if ((request.Order != null) && (request.Order.AddressList != null) && (request.Order.AddressList.Address != null))
+                {
+                    var itemCount = request.Order.AddressList.Address.Count();
+                    xF.AddInput("orderaddresscount", itemCount.ToString());
+                    foreach (var item in request.Order.AddressList.Address)
+                    {
+                        xF.AddInput("orderaddresscity" + itemCount.ToString(), item.City);
+                        xF.AddInput("orderaddresscompany" + itemCount.ToString(), item.Company);
+                        xF.AddInput("orderaddresscountry" + itemCount.ToString(), item.Country);
+                        xF.AddInput("orderaddressdistrict" + itemCount.ToString(), item.District);
+                        xF.AddInput("orderaddressfaxnumber" + itemCount.ToString(), item.FaxNumber);
+                        xF.AddInput("orderaddressgsmnumber" + itemCount.ToString(), item.GSMNumber);
+                        xF.AddInput("orderaddresslastname" + itemCount.ToString(), item.LastName);
+                        xF.AddInput("orderaddressphonenumber" + itemCount.ToString(), item.PhoneNumber);
+                        xF.AddInput("orderaddresspostalcode" + itemCount.ToString(), item.PostalCode);
+                        xF.AddInput("orderaddresstext" + itemCount.ToString(), item.Text);
+                        xF.AddInput("orderaddresstype" + itemCount.ToString(), item.Type.GetXmlEnumName());
+                    }
+                }
+
+                //TODO money card information
+                //xF.AddInput("moneyccdisc", request.Transaction.MoneyCard.);
+                //xF.AddInput("moneyextradisc", request.Transaction.MoneyCard.);
+                //xF.AddInput("moneyinvoice", request.Transaction.MoneyCard.);
+                //xF.AddInput("moneypayment", request.Transaction.MoneyCard.);
+                //xF.AddInput("moneyproductbaseddisc", request.Transaction.MoneyCard.);
+
+                //TODO utility information
+                if(request.Transaction.UtilityPayment!= null)
+                {
+                    xF.AddInput("utilitypayinvoiceid", request.Transaction.UtilityPayment.InvoiceID);
+                    xF.AddInput("utilitypaysubscode", request.Transaction.UtilityPayment.SubscriberCode);
+                    //xF.AddInput("utilitypaytype", request.Transaction.UtilityPayment);
+                }
+
+                //GSM information
+                if (request.Transaction.GSMUnitSales != null)
+                {
+                    xF.AddInput("gsmquantity", request.Transaction.GSMUnitSales.Quantity);
+                    xF.AddInput("gsmsalesamnt", request.Transaction.GSMUnitSales.Amount.ToString());
+                    xF.AddInput("gsmsalesunitid", request.Transaction.GSMUnitSales.UnitID);
+                }
+                ret = xF;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ret;
+        }
+
+ 
         #region Privates
         private string isRequireZero(int time)
         {
@@ -525,7 +719,6 @@
         {
             var gvpResponse = new GVPSResponse();
             var xmlString = SerializeObjectToXmlString<GVPSRequest>(request);
-
             gvpResponse.RawRequest = xmlString;
 
             try
@@ -533,11 +726,11 @@
                 var responseString = string.Empty;
                 if (Use3D)
                 {
-                    responseString = SendHttpRequest(REQUEST_URL_FOR_3D, "Post", String.Format("data={0}", System.Net.WebUtility.UrlEncode(xmlString)));
+                    responseString = SendHttpRequest(REQUEST_URL_FOR_3D, "Post", String.Format("data={0}", WebUtility.UrlEncode(xmlString)));
                 }
                 else
                 {
-                    responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", System.Net.WebUtility.UrlEncode(xmlString)));
+                    responseString = SendHttpRequest(REQUEST_URL, "Post", String.Format("data={0}", WebUtility.UrlEncode(xmlString)));
                 }
                 gvpResponse.RawResponse = responseString;
                 gvpResponse = DeSerializeObject<GVPSResponse>(responseString);

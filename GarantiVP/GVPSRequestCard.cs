@@ -30,5 +30,11 @@ namespace GarantiVP
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string CVV2 { get; set; }
 
+        /// <summary>
+        /// Cardholder name
+        /// <para lang="tr">Kart sahibi adı</para> 
+        /// </summary>
+        [XmlElement()]
+        public string CardHolder { get; set; }
     }
 }

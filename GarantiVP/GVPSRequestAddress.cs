@@ -94,5 +94,13 @@ namespace GarantiVP
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string FaxNumber { get; set; }
+
+        /// <summary>
+        /// Country
+        /// <para>Size ? Byte</para>
+        /// <para lang="tr">Ülke</para> 
+        /// </summary>
+        [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string Country { get; set; }
     }
 }
