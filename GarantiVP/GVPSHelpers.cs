@@ -26,6 +26,22 @@ namespace GarantiVP
             return finfo.GetCustomAttributes(typeof(XmlEnumAttribute), false).Select(e => (XmlEnumAttribute)e).Where(e => e != null).Select(e => e.Name).FirstOrDefault();
         }
 
+        public static T GetValueFromXmlEnumName<T>(this string val) where T : struct
+        {
+            T ret = default(T);
+            Type type = typeof(T);
+            foreach (T e in Enum.GetValues(type))
+            {
+                var XmlName = (e as Enum).GetXmlEnumName();
+                if(string.Equals(val, XmlName))
+                {
+                    ret = e;
+                    break;
+                }
+            }
+            return ret; 
+        }
+
         /// <summary>
         /// 
         /// </summary>

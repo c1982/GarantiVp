@@ -23,7 +23,7 @@
 
         private string REQUEST_URL;
         private string REQUEST_URL_FOR_3D;
-        private string _secureString;
+        private string hashedPassword;
         private Encoding usingEncoding = Encoding.GetEncoding("iso-8859-9");
 
         public Encoding UsingEncoding
@@ -90,7 +90,7 @@
             request.Terminal.SubMerchantID = SubMerchantID;
             request.Terminal.UserID = userID;
 
-            this._secureString = GetSHA1(userPassword + isRequireZero(terminalId, 9)).ToUpper();
+            this.hashedPassword = GetSHA1(userPassword + isRequireZero(terminalId, 9)).ToUpper();
 
             return this;
         }
@@ -312,7 +312,7 @@
                                                     request.Terminal.ID +
                                                     request.Card.Number +
                                                     request.Transaction.Amount +
-                                                    this._secureString).ToUpper();
+                                                    this.hashedPassword).ToUpper();
 
             return Send();
         }
@@ -327,7 +327,7 @@
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                 request.Terminal.ID +
                                                 request.Transaction.Amount +
-                                                this._secureString).ToUpper();
+                                                this.hashedPassword).ToUpper();
 
             return Send();
         }
@@ -358,7 +358,7 @@
             request.Terminal.HashData = GetSHA1(request.Order.OrderID +
                                                 request.Terminal.ID +
                                                 request.Transaction.Amount +
-                                                this._secureString).ToUpper();
+                                                this.hashedPassword).ToUpper();
 
             return Send();
         }
@@ -372,7 +372,7 @@
                                                     request.Terminal.ID +
                                                     request.Card.Number +
                                                     request.Transaction.Amount +
-                                                    this._secureString).ToUpper();
+                                                    this.hashedPassword).ToUpper();
             return Send();
         }
 
@@ -391,7 +391,7 @@
                                         request.Terminal.ID +
                                         ((request.Card == null) ? "" : request.Card.Number) +
                                         request.Transaction.Amount +
-                                        this._secureString).ToUpper();
+                                        this.hashedPassword).ToUpper();
 
             return Send();
         }
@@ -407,7 +407,7 @@
                                                     request.Terminal.ID +
                                                     request.Card.Number +
                                                     request.Transaction.Amount +
-                                                    this._secureString).ToUpper();
+                                                    this.hashedPassword).ToUpper();
 
             return Send();
         }
@@ -442,7 +442,7 @@
                                                     + OperationType
                                                     + (request.Transaction.InstallmentCnt ?? "")
                                                     + storeKeyFor3D
-                                                    + this._secureString).ToUpper();
+                                                    + this.hashedPassword).ToUpper();
 
                 string RefreshTime = null;
                 string Lang = null;
@@ -605,191 +605,389 @@
             return ret;
         }
 
-        public GVPSResponse Sales3DEvaluatesResponseAndGetProvision(IDictionary<string, string[]> formDataDic)
+        public GVPSResponse Sales3DEvaluatesResponseAndGetProvision(IDictionary<string, string[]> formDataDic, string storeKeyFor3D, Uri successUri, Uri failUri)
         {
             if (formDataDic == null)
                 throw new ArgumentNullException("postData");
             /*
-                mdstatus
+                +mdstatus
                 mderrormessage
                 errmsg
                 clientid
                 oid
                 response
                 procreturncode
-                *successurl
-                txninstallmentcount
-                +ordergroupid
                 version
-                cardholder
-                refreshtime
-                +orderid
-                txntype
-                txndelaydaycnt
-                terminalmerchantid
-                txnamount
-                terminaluserid
-                txndownpayrate
-                orderdescription
-                mode
-                txncurrencycode
-                txncardholderpresentcode
-                secure3dhash
-                txnmotoind
-                errorurl
-                customeremailaddress
-                customeripaddress
-                terminalprovuserid
-                terminalid
-                lang
              */
-            
+
+            /* GARANTI 3D ALANLAR
+                +cardnumber
+                +cardcvv2
+                +cardexpiredatemonth
+                +cardexpiredateyear
+                +cardholder
+
+                +secure3dauthenticationcode
+                +secure3dsecuritylevel
+                +secure3dtxnid
+                +secure3drnd
+                +secure3dhash
+                +secure3DRecordKey
+
+                +mode
+                +apiversion
+                +customeremailaddress
+                +customeripaddress
+
+                +terminalid
+                +terminalmerchantid
+
+                -?firmacardno
+                +txncurrencycode
+                -?companyname
+                +errorurl
+                +successurl
+                +terminalprovuserid
+                +terminaluserid
+                +orderid
+                -?refreshtime
+                -?lang
+                +ordergroupid
+                +orderdescription
+
+                +txnamount
+                +txntype
+                +txninstallmentcount
+                txninstallmentperiod
+                txntimestamp
+                txndownpayrate
+                txndelaydaycnt
+                txncardholderpresentcode
+                txndescription
+                txnmotoind
+                
+                utilitypayinvoiceid
+                utilitypaysubscode
+                utilitypaytype
+                
+                gsmquantity
+                gsmsalesamnt
+                gsmsalesunitid
+                
+                moneyccdisc
+                moneyextradisc
+                moneyinvoice
+                moneypayment
+                moneyproductbaseddisc
+
+                +orderitemcount
+                +orderitemnumber+ Count
+                +orderitemproductid+ Count
+                +orderitemproductcode+ Count
+                +orderitemquantity+ Count
+                +orderitemprice+ Count
+                +orderitemtotalamount+ Count
+                +orderitemdescription+ Count
+
+                +orderaddresscount
+                +orderaddresscity+ Count
+                +orderaddresscompany+ Count
+                +orderaddresscountry+ Count
+                +orderaddressdistrict+ Count
+                +orderaddressfaxnumber+ Count
+                +orderaddressgsmnumber+ Count
+                +orderaddresslastname+ Count
+                +orderaddressname+ Count
+                +orderaddressphonenumber+ Count
+                +orderaddresspostalcode+ Count
+                +orderaddresstext+ Count
+                +orderaddresstype+ Count
+
+                +ordercommentcount
+                +ordercommenttext+ Count
+                +ordercommentnumber+ Count
+
+                txnrewardcount
+                txnrewardtype+ Count
+                txnrewardgainedamount+ Count
+                txnrewardusedamount+ Count
+
+                txnchequecount
+                txnchequetype+ Count
+                txnchequeamount+ Count
+                txnchequebitmap+ Count
+                txnchequeid+ Count
+                txnchequecount+ Count
+             */
+
             //TODO Fill GVPSResponse from posted form data...
             var ret = new GVPSResponse();
 
+            //internal
+            ret.RawRequest = string.Join("&", formDataDic.Select(e => string.Join("&", e.Value.Select(v => WebUtility.UrlEncode(e.Key) + "=" + WebUtility.UrlEncode(v)).ToArray())));
+            ret.RawResponse = null;
+
+            //Root
+            ret.ChannelCode = formDataDic[""].FirstOrDefault();
+            ret.Mode = formDataDic["mode"].FirstOrDefault().GetValueFromXmlEnumName<GVPSRequestModeEnum>();
+            ret.Version = formDataDic["apiversion"].FirstOrDefault();
+
+            //Card
             ret.Card = new GVPSCard();
-            ret.ChannelCode = "";
+            ret.Card.CardHolder = formDataDic["cardholder"].FirstOrDefault();
+            ret.Card.CVV2 = formDataDic["cardcvv2"].FirstOrDefault();
+            ret.Card.ExpireDate = formDataDic["cardexpiredatemonth"].FirstOrDefault()
+                                + formDataDic["cardexpiredateyear"].FirstOrDefault();
+            ret.Card.Number = formDataDic["cardnumber"].FirstOrDefault();
 
+            //Customer
             ret.Customer = new GVPSCustomer();
-            ret.Customer.EmailAddress = "";
-            ret.Customer.IPAddress = "";
+            ret.Customer.EmailAddress = formDataDic["customeremailaddress"].FirstOrDefault();
+            ret.Customer.IPAddress = formDataDic["customeripaddress"].FirstOrDefault();
 
-            ret.Mode = GVPSRequestModeEnum.Unspecified;
-
+            //Order
             ret.Order = new GVPSOrder();
-
-            ret.Order.AddressList = new GVPSAddressList();
-            ret.Order.AddressList.Address = new GVPSAddress[] { };
-
-            ret.Order.CommentList = new GVPSCommentList();
-            ret.Order.CommentList.Comment = new GVPSComment[] { };
-
-            ret.Order.Description = "";
             ret.Order.GroupID = formDataDic["orderid"].FirstOrDefault();
-
-            ret.Order.ItemList = new GVPSItemList();
-            ret.Order.ItemList.Item = new GVPSItem[] { };
-
             ret.Order.OrderID = formDataDic["ordergroupid"].FirstOrDefault();
+            ret.Order.Description = formDataDic["orderdescription"].FirstOrDefault();
 
+            //Order addresses
+            var addressCount = 0;
+            if (int.TryParse(formDataDic["orderaddresscount"].FirstOrDefault(), out addressCount))
+            {
+                ret.Order.AddressList = new GVPSAddressList();
+                var AddressList = new List<GVPSAddress>();
+                for (int i = 0; i < addressCount; i++)
+                {
+                    AddressList.Add(new GVPSAddress());
+                    AddressList.Last().City = formDataDic["orderaddresscity" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().Company = formDataDic["orderaddresscompany" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().Country = formDataDic["orderaddresscountry" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().District = formDataDic["orderaddressdistrict" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().FaxNumber = formDataDic["orderaddressfaxnumber" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().GSMNumber = formDataDic["orderaddressgsmnumber" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().LastName = formDataDic["orderaddresslastname" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().Name = formDataDic["orderaddressname" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().PhoneNumber = formDataDic["orderaddressphonenumber" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().PostalCode = formDataDic["orderaddresspostalcode" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().Text = formDataDic["orderaddresstext" + i.ToString()].FirstOrDefault();
+                    AddressList.Last().Type = formDataDic["orderaddresstype" + i.ToString()].FirstOrDefault().GetValueFromXmlEnumName<GVPSAddressTypeEnum>();
+                }
+                ret.Order.AddressList.Address = AddressList.ToArray();
+            }
+
+            //Order Comment
+            var commentCount = 0;
+            if (int.TryParse(formDataDic["orderaddresstype"].FirstOrDefault(), out commentCount))
+            {
+                ret.Order.CommentList = new GVPSCommentList();
+                var CommentList = new List<GVPSComment>();
+                for (int i = 0; i < commentCount; i++)
+                {
+                    CommentList.Add(new GVPSComment());
+                    CommentList.Last().Number = uint.Parse(formDataDic["ordercommentnumber" + i.ToString()].FirstOrDefault());
+                    CommentList.Last().Text = formDataDic["ordercommenttext" + i.ToString()].FirstOrDefault();
+                }
+                ret.Order.CommentList.Comment = CommentList.ToArray();
+            }
+
+            //Order Items
+            var orderItemCount = 0;
+            if (int.TryParse(formDataDic["orderitemcount"].FirstOrDefault(), out orderItemCount))
+            {
+                ret.Order.ItemList = new GVPSItemList();
+                var ItemList = new List<GVPSItem>();
+                for (int i = 0; i < orderItemCount; i++)
+                {
+                    ItemList.Add(new GVPSItem());
+                    ItemList.Last().Description = formDataDic["orderitemdescription" + i.ToString()].FirstOrDefault();
+                    ItemList.Last().Number = uint.Parse(formDataDic["orderitemnumber" + i.ToString()].FirstOrDefault());
+                    ItemList.Last().Price = ulong.Parse(formDataDic["orderitemprice" + i.ToString()].FirstOrDefault());
+                    ItemList.Last().ProductCode = formDataDic["orderitemproductcode" + i.ToString()].FirstOrDefault();
+                    ItemList.Last().ProductID = formDataDic["orderitemproductid" + i.ToString()].FirstOrDefault();
+                    ItemList.Last().Quantity = ulong.Parse(formDataDic["orderitemquantity" + i.ToString()].FirstOrDefault());
+                    ItemList.Last().TotalAmount = ulong.Parse(formDataDic["orderitemtotalamount" + i.ToString()].FirstOrDefault());
+                }
+                ret.Order.ItemList.Item = ItemList.ToArray();
+            }
+
+            //Order Recurring
             ret.Order.Recurring = new GVPSRecurring();
-            ret.Order.Recurring.FrequencyInterval = 0;
+            ret.Order.Recurring.FrequencyInterval = ushort.Parse(formDataDic[""].FirstOrDefault());
             ret.Order.Recurring.FrequencyType = GVPSFrequencyTypeEnum.Unspecified;
             ret.Order.Recurring.PaymentList = new GVPSReccuringPaymentList();
-            ret.Order.Recurring.PaymentList.Payment = new GVPSReccurringPayment[] { };
+            var ReccurringPaymentList = new List<GVPSReccurringPayment>();
+            ReccurringPaymentList.Add(new GVPSReccurringPayment());
+            ReccurringPaymentList.Last().Amount = formDataDic[""].FirstOrDefault();
+            ReccurringPaymentList.Last().PaymentNum = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Order.Recurring.PaymentList.Payment = ReccurringPaymentList.ToArray();
 
-            ret.RawRequest = "";
-            ret.RawResponse = "";
-
+            //SettlementInq
             ret.SettlementInq = new GVPSSettlementInq();
 
+            //Terminal
             ret.Terminal = new GVPSTerminal();
-            ret.Terminal.HashData = "";
-            ret.Terminal.ID = "";
-            ret.Terminal.MerchantID = "";
-            ret.Terminal.ProvUserID = "";
-            ret.Terminal.SubMerchantID = "";
-            ret.Terminal.UserID = "";
+            ret.Terminal.HashData = formDataDic[""].FirstOrDefault();
+            ret.Terminal.ID = formDataDic["terminalid"].FirstOrDefault();
+            ret.Terminal.MerchantID = formDataDic["terminalmerchantid"].FirstOrDefault();
+            ret.Terminal.ProvUserID = formDataDic["terminalprovuserid"].FirstOrDefault();
+            ret.Terminal.SubMerchantID = formDataDic[""].FirstOrDefault();
+            ret.Terminal.UserID = formDataDic["terminaluserid"].FirstOrDefault();
 
+            //Transaction
             ret.Transaction = new GVPSTransaction();
-
-            ret.Transaction.Amount = 0;
-            ret.Transaction.AuthCode = "";
-            ret.Transaction.BatchNum = "";
+            ret.Transaction.Amount = ulong.Parse(formDataDic["txnamount"].FirstOrDefault());
+            ret.Transaction.AuthCode = formDataDic[""].FirstOrDefault();
+            ret.Transaction.BatchNum = formDataDic[""].FirstOrDefault();
             ret.Transaction.CardholderPresentCode = GVPSCardholderPresentCodeEnum.Unspecified;
+            ret.Transaction.CurrencyCode = formDataDic["txncurrencycode"].FirstOrDefault().GetValueFromXmlEnumName<GVPSCurrencyCodeEnum>();
+            ret.Transaction.DelayDayCount = formDataDic[""].FirstOrDefault();
+            ret.Transaction.DownPaymentRate = formDataDic[""].FirstOrDefault();
+            ret.Transaction.InstallmentCnt = formDataDic["txninstallmentcount"].FirstOrDefault();
+            ret.Transaction.MotoInd = GVPSMotoIndEnum.Unspecified;
+            ret.Transaction.OriginalRetrefNum = formDataDic[""].FirstOrDefault();
+            ret.Transaction.ProvDate = formDataDic[""].FirstOrDefault();
+            ret.Transaction.RetrefNum = formDataDic[""].FirstOrDefault();
+            ret.Transaction.SequenceNum = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Type = formDataDic["txntype"].FirstOrDefault().GetValueFromXmlEnumName<GVPSTransactionTypeEnum>(); 
 
+            //Transaction CepBank
             ret.Transaction.CepBank = new GVPSCepBank();
-            ret.Transaction.CepBank.GSMNumber = "";
+            ret.Transaction.CepBank.GSMNumber = formDataDic[""].FirstOrDefault();
             ret.Transaction.CepBank.PaymentType = GVPSPaymentTypeEnum.Unspecified;
 
+            //Transaction CepBankInq
             ret.Transaction.CepBankInq = new GVPSCepBankIng();
-            ret.Transaction.CepBankInq.GSMNumber = "";
+            ret.Transaction.CepBankInq.GSMNumber = formDataDic[""].FirstOrDefault();
 
+            //Transaction ChequeList
             ret.Transaction.ChequeList = new GVPSChequeList();
+            //TODO Transaction.ChequeList
+
             ret.Transaction.CommercialCardExtendedCredit = new GVPSCommercialCardExtendedCredit();
             ret.Transaction.CommercialCardExtendedCredit.PaymentList = new GVPSTransactionPaymentList();
-            ret.Transaction.CommercialCardExtendedCredit.PaymentList.Payment = new GVPSTransactionPayment[] { };
+            var TransactionPaymentList = new List<GVPSTransactionPayment>();
+            TransactionPaymentList.Add(new GVPSTransactionPayment());
+            TransactionPaymentList.Last().Amount = formDataDic[""].FirstOrDefault();
+            TransactionPaymentList.Last().DueDate = formDataDic[""].FirstOrDefault();
+            TransactionPaymentList.Last().Number = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.CommercialCardExtendedCredit.PaymentList.Payment = TransactionPaymentList.ToArray();
 
-            ret.Transaction.CurrencyCode = GVPSCurrencyCodeEnum.Unspecified;
-            ret.Transaction.DelayDayCount = "";
-            ret.Transaction.DownPaymentRate = "";
-
+            //Transaction GSMUnitInq
             ret.Transaction.GSMUnitInq = new GVPSGSMUnitInq();
-            ret.Transaction.GSMUnitInq.InstitutionCode = 0;
-            ret.Transaction.GSMUnitInq.Quantity = "";
-            ret.Transaction.GSMUnitInq.SubscriberCode = "";
+            ret.Transaction.GSMUnitInq.InstitutionCode = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.GSMUnitInq.Quantity = formDataDic[""].FirstOrDefault();
+            ret.Transaction.GSMUnitInq.SubscriberCode = formDataDic[""].FirstOrDefault();
             ret.Transaction.GSMUnitSales = new GVPSGSMUnitSales();
 
-            ret.Transaction.GSMUnitSales.InstitutionCode = 0;
-            ret.Transaction.GSMUnitSales.Quantity = "";
-            ret.Transaction.GSMUnitSales.SubscriberCode = "";
-            ret.Transaction.GSMUnitSales.UnitID = "";
+            //Transaction GSMUnitSales
+            ret.Transaction.GSMUnitSales.InstitutionCode = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.GSMUnitSales.Quantity = formDataDic[""].FirstOrDefault();
+            ret.Transaction.GSMUnitSales.SubscriberCode = formDataDic[""].FirstOrDefault();
+            ret.Transaction.GSMUnitSales.UnitID = formDataDic[""].FirstOrDefault();
 
+            //Transaction HostMsgList
             ret.Transaction.HostMsgList = new GVPSHostMsgList();
             ret.Transaction.HostMsgList.HostMsg = new string[] {};
 
-            ret.Transaction.InstallmentCnt = "";
-
+            //Transaction MoneyCard
             ret.Transaction.MoneyCard = new GVPSMoneyCard();
 
-            ret.Transaction.MotoInd = GVPSMotoIndEnum.Unspecified;
-
-            ret.Transaction.OriginalRetrefNum = "";
-
-            ret.Transaction.ProvDate = "";
-
+            //Transaction Response
             ret.Transaction.Response = new GVPSTransactionResponse();
-            ret.Transaction.Response.Code = "";
-            ret.Transaction.Response.ErrorMsg = "";
-            ret.Transaction.Response.Message = "";
-            ret.Transaction.Response.ReasonCode = "";
-            ret.Transaction.Response.Source = "";
-            ret.Transaction.Response.SysErrMsg = "";
+            ret.Transaction.Response.Code = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Response.ErrorMsg = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Response.Message = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Response.ReasonCode = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Response.Source = formDataDic[""].FirstOrDefault();
+            ret.Transaction.Response.SysErrMsg = formDataDic[""].FirstOrDefault();
 
-            ret.Transaction.RetrefNum = "";
-
+            //Transaction RewardInqResult 
             ret.Transaction.RewardInqResult = new GVPSRewardInqResult();
             ret.Transaction.RewardInqResult.ChequeList = new GVPSChequeList();
             //TODO ret.Transaction.RewardInqResult.ChequeList.
 
+            //Transaction RewardList 
             ret.Transaction.RewardList = new GVPSRewardList();
             ret.Transaction.RewardList.Reward = new GVPSReward[] { new GVPSReward() { } }; //TODO fill GVPSResponseReward properties
 
+            //Transaction Secure3D 
             ret.Transaction.Secure3D = new GVPSSecure3D();
-            ret.Transaction.Secure3D.AuthenticationCode = "";
-            ret.Transaction.Secure3D.Md = GVPSMdStatusEnum.Undefined; 
-            ret.Transaction.Secure3D.SecurityLevel = 0;
-            ret.Transaction.Secure3D.TxnID = "";
+            ret.Transaction.Secure3D.AuthenticationCode = formDataDic["secure3dauthenticationcode"].FirstOrDefault(); 
+            ret.Transaction.Secure3D.Md = formDataDic["mdstatus"].FirstOrDefault().GetValueFromXmlEnumName<GVPSMdStatusEnum>(); 
+            ret.Transaction.Secure3D.SecurityLevel = ushort.Parse(formDataDic["secure3dsecuritylevel"].FirstOrDefault());
+            ret.Transaction.Secure3D.TxnID = formDataDic["secure3dtxnid"].FirstOrDefault();
 
-            ret.Transaction.SequenceNum = "";
 
-            ret.Transaction.Type = GVPSTransactionTypeEnum.Unspecified;
-
+            //Transaction UtilityPayment
             ret.Transaction.UtilityPayment = new GVPSUtilityPayment();
-            ret.Transaction.UtilityPayment.Amount = 0;
-            ret.Transaction.UtilityPayment.InstitutionCode = 0;
-            ret.Transaction.UtilityPayment.InvoiceID = "";
-            ret.Transaction.UtilityPayment.SubscriberCode = "";
+            ret.Transaction.UtilityPayment.Amount = ulong.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.UtilityPayment.InstitutionCode = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.UtilityPayment.InvoiceID = formDataDic[""].FirstOrDefault();
+            ret.Transaction.UtilityPayment.SubscriberCode = formDataDic[""].FirstOrDefault();
 
+            //Transaction UtilityPaymentInq
             ret.Transaction.UtilityPaymentInq = new GVPSUtilityPaymentInq();
-            ret.Transaction.UtilityPaymentInq.InstitutionCode = 0;
-            ret.Transaction.UtilityPaymentInq.SubscriberCode = "";
+            ret.Transaction.UtilityPaymentInq.InstitutionCode = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.UtilityPaymentInq.SubscriberCode = formDataDic[""].FirstOrDefault();
 
+            //Transaction UtilityPaymentVoidInq
             ret.Transaction.UtilityPaymentVoidInq = new GVPSUtilityPaymentVoidInq();
-            ret.Transaction.UtilityPaymentVoidInq.InstitutionCode = 0;
-            ret.Transaction.UtilityPaymentVoidInq.SubscriberCode = "";
+            ret.Transaction.UtilityPaymentVoidInq.InstitutionCode = ushort.Parse(formDataDic[""].FirstOrDefault());
+            ret.Transaction.UtilityPaymentVoidInq.SubscriberCode = formDataDic[""].FirstOrDefault();
 
+            //Transaction Verification
             ret.Transaction.Verification = new GVPSVerification();
-            ret.Transaction.Verification.Identity = "";
+            ret.Transaction.Verification.Identity = formDataDic[""].FirstOrDefault();
 
-            //string secure3dhash = ((string)postData["secure3dhash"]).FirstOrDefault();
-            //string ValidateHashData = GetSHA1(strTerminalID + strOrderID + strAmount + strSuccessURL + strErrorURL + strType + strInstallmentCount + strStoreKey + SecurityData).ToUpper()
 
-            ret.Version = "";
+            //Checks
+            var Secure3DRandom = formDataDic["secure3drnd"].FirstOrDefault();
+            var Secure3DHash = formDataDic["secure3dhash"].FirstOrDefault();
+            //var Secure3DHash = formDataDic["hash"].FirstOrDefault();
+            var Secure3DRecordKey = formDataDic["secure3DRecordKey"].FirstOrDefault();
+            var Secure3DHashParams = formDataDic["hashparams"].FirstOrDefault();
+            var Secure3DHashParamsVal = formDataDic["hashparamsval"].FirstOrDefault();
+            string Secure3DHashCalculated = null;
+            if (string.IsNullOrWhiteSpace(Secure3DHash))
+                throw new ArgumentNullException("secure3dhash", "Bank hash response is null or empty.");
+            if ((!string.IsNullOrWhiteSpace(Secure3DHashParams)) && (!string.IsNullOrWhiteSpace(Secure3DHashParamsVal)))
+            {
+                var Secure3DHashParamsList = Secure3DHashParams.Split(':');
+                var Secure3DHashText = "";
+                foreach (var item in Secure3DHashParamsList)
+                {
+                    Secure3DHashText += formDataDic[item].FirstOrDefault() ?? "";
+                }
+                if (string.IsNullOrWhiteSpace(storeKeyFor3D))
+                    throw new ArgumentNullException("storeKeyFor3D");
+                Secure3DHashCalculated = GetSHA1(Secure3DHashText + storeKeyFor3D).ToUpper();
+            }
+            if (string.IsNullOrWhiteSpace(Secure3DHashCalculated))
+                throw new ArgumentNullException("Secure3DHashCalculated", "Secure3DHashCalculated is null or empty.");
+            if (Secure3DHashCalculated != Secure3DHash)
+                throw new ArgumentException("Bank hash response and calculated hash not equal.");
+
+            var Hash3D = GetSHA1(
+                ret.Terminal.ID
+                + ret.Order.OrderID
+                + ret.Transaction.Amount.ToString()
+                + successUri.ToString()
+                + failUri.ToString()
+                + ret.Transaction.Type
+                + ret.Transaction.InstallmentCnt
+                + storeKeyFor3D
+                + this.hashedPassword
+                ).ToUpper();
+
             return ret;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         #region Privates
         private string isRequireZero(int time)
         {
@@ -798,6 +996,12 @@
                                                             isRequireZero(time - 2000) : time.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="complete"></param>
+        /// <returns></returns>
         static string isRequireZero(string id, int complete)
         {
             var _tmp = id.Trim();
@@ -809,6 +1013,11 @@
             return id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="SHA1Data"></param>
+        /// <returns></returns>
         private string GetSHA1(string SHA1Data)
         {
             var sha = new SHA1CryptoServiceProvider();
@@ -821,6 +1030,11 @@
             return GetHexaDecimal(inputbytes);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         private string GetHexaDecimal(byte[] bytes)
         {
             var s = new StringBuilder();
@@ -832,6 +1046,12 @@
             return s.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="TModel"></param>
+        /// <returns></returns>
         private string SerializeObjectToXmlString<T>(T TModel)
         {
             string xmlData = String.Empty;
@@ -852,6 +1072,12 @@
             return xmlData;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlData"></param>
+        /// <returns></returns>
         private T DeSerializeObject<T>(string xmlData)
         {
             T deSerializeObject = default(T);
@@ -868,6 +1094,13 @@
             return deSerializeObject;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Host"></param>
+        /// <param name="Method"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
         private string SendHttpRequest(string Host, string Method, string Params)
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate
@@ -899,6 +1132,11 @@
             return returnSrting;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Use3D"></param>
+        /// <returns></returns>
         private GVPSResponse Send(bool Use3D = false)
         {
             var gvpResponse = new GVPSResponse();

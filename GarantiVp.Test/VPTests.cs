@@ -13,30 +13,30 @@
     {
         //GARANTI VPos definations
         private const string MerchandID = "7000679";
-        private const string SubMerchandID = "";
+        private const string SubMerchandID = null;
+        //private const string MerchandID = "30690168";
+        //private const string SubMerchandID = "35204";
+        private const string SecureKey = "1234578";
 
         //GARANTI Terminal definations
-        private const string TerminalID_For_XML = "30691244";
+        private const string TerminalID_For_XML = "30691297";
         private const string TerminalID_For_3D = "30691297";
         private const string TerminalID_For_3D_PAY = "30691298";
         private const string TerminalID_For_3D_OOS_PAY = "30691299";
         private const string TerminalID_For_OOS_PAY = "30691300";
         private const string TerminalID_For_3D_FULL = "30691301";
 
-        private const string ProvUserID_For_XML = "PROVAUT";
-        private const string ProvUserID_For_3D = "GARANTI";
+        //GARANTI Provision user definations
+        private const string ProvUserID_AUT = "PROVAUT";
+        private const string ProvUserID_FRN = "PROVRFN";
+        private const string ProvUserID_OOS = "PROVOOS";
+        private const string ProvUserID_3DS = "GARANTI";
         private const string ProvUserPassword = "123qweASD";
 
         //3D Secure configs
-        private const string StoreKeyFor3D = "1234578";
         private Uri HostUri = new Uri("http://localhost:5000");
-        private string HostUriSuccessPath = "/success";
-        private string HostUriFailPath = "/fail";
-
-        //GARANTI VPos test configuration
-        private string TerminalID = TerminalID_For_3D;
-        private string UserID = ProvUserID_For_XML;
-        private string UserPassword = ProvUserPassword;
+        private const string HostUriSuccessPath = "/success";
+        private const string HostUriFailPath = "/fail";
 
         //Credit card details
         private const string credit_card_number = "4824894728063019";
@@ -47,8 +47,8 @@
         //Credit card details for 3D
         private const string credit_card_number_for_3D = "4282209004348015";
         private const string credit_card_cvv2_for_3D = "123";
-        private const int credit_card_month_for_3D = 2;
-        private const int credit_card_year_for_3D = 15;
+        private const int credit_card_month_for_3D = 7;
+        private const int credit_card_year_for_3D = 19;
 
         //Order details
         static string OrderId = "cc5f63d899e64f39b996b1e9156a270e";
@@ -125,7 +125,6 @@
             }
         }
 
-
         private string GenerateMD5(string val)
         {
             var md5 = System.Security.Cryptography.MD5.Create();
@@ -147,7 +146,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -163,7 +162,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, UserID, UserPassword, SubMerchandID)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword, SubMerchandID)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -182,7 +181,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, UserID, UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -197,7 +196,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -213,7 +212,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -228,7 +227,7 @@
         public void DownPaymentRate_SalesTest()
         {
             var _pay = new GVPSClient().Test(true)
-                                        .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                        .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                             .Customer(customer_email, customer_ipAddress)
                                             .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                             .Order(Guid.NewGuid().ToString("N"))
@@ -264,7 +263,7 @@
                 throw new ArgumentNullException("OrderRefNumberForCancel");
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVRFN", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_FRN, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .Order(OrderIdForCancel)
                                     .Amount(95)
@@ -288,7 +287,7 @@
                 throw new ArgumentNullException("orderIdForRefund");
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .Order(OrderIdForRefund)
                                     .Amount(95)
@@ -314,7 +313,7 @@
                 throw new ArgumentNullException("OrderRefNumberForRefundCancel");
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .Order(OrderIdForRefundCancel)
                                     .Amount(95)
@@ -328,7 +327,7 @@
         {
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(Guid.NewGuid().ToString("N"))
@@ -358,7 +357,7 @@
                 throw new ArgumentNullException("OrderIdForPreAuthSales");
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                                     .Order(OrderIdForPreAuthSales)
@@ -385,7 +384,7 @@
             PreauthSalesTest();
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .Order(OrderIdForPreAuthSales)
                                     .Amount(95)
@@ -402,7 +401,7 @@
 
             var _pay = new GVPSClient()
                                     .Test(true)
-                                    .Company(TerminalID, MerchandID, "PROVAUT", UserPassword)
+                                    .Company(TerminalID_For_XML, MerchandID, ProvUserID_AUT, ProvUserPassword)
                                     .Customer(customer_email, customer_ipAddress)
                                     .Order(Guid.NewGuid().ToString("N"))
                                     .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
@@ -416,15 +415,18 @@
         public void Sale3DTest()
         {
             var IsFail = false;
+            string FailMessage = null;
             var VPClient = new GVPSClient();
+            Uri successUri = new Uri(HostUri, HostUriSuccessPath);
+            Uri failUri = new Uri(HostUri, HostUriFailPath);
             var Request = VPClient
                         .Test(true)
-                        .Company(TerminalID_For_3D_FULL, MerchandID, UserID, UserPassword, SubMerchandID)
+                        .Company(TerminalID_For_3D_FULL, MerchandID, ProvUserID_3DS, ProvUserPassword, SubMerchandID)
                         .Customer(customer_email, customer_ipAddress)
                         .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
                         .Order(Guid.NewGuid().ToString("N"))
                         .Amount(1234.567, GVPSCurrencyCodeEnum.TRL)
-                        .Sale3DRequest(StoreKeyFor3D, new Uri(HostUri, HostUriSuccessPath), new Uri(HostUri, HostUriFailPath));
+                        .Sale3DRequest(SecureKey, successUri, failUri);
             Request.AddInput("", "Gönder", "submit");
             var HTML = Request.OuterXml;
             var i = SelfHost.Run(HostUri.ToString())
@@ -448,7 +450,7 @@
                         if (con.Request.Method == "POST")
                         {
                             ResponseHTML += SelfHost.CreateWebContent(formDataDic);
-                            var Result = VPClient.Sales3DEvaluatesResponseAndComplete(formDataDic);
+                            var Result = VPClient.Sales3DEvaluatesResponseAndGetProvision(formDataDic, SecureKey, successUri, failUri);
                             ValidateResult(Result);
                         }
                         con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D SUCCESS page"));
@@ -456,6 +458,8 @@
                     }
                     catch (Exception exSuccess)
                     {
+                        IsFail = true;
+                        FailMessage = exSuccess.ToString();
                         con.Response.Write(SelfHost.CreateWebContent("<pre>" + exSuccess.ToString() + "</pre>", "Sales 3D INTERNAL ERROR SUCCESS page"));
                         throw;
                     }
@@ -477,13 +481,14 @@
                         if (con.Request.Method == "POST")
                         {
                             ResponseHTML += SelfHost.CreateWebContent(formDataDic);
-                            var Result = VPClient.Sales3DEvaluatesResponseAndComplete(formDataDic);
+                            var Result = VPClient.Sales3DEvaluatesResponseAndGetProvision(formDataDic, SecureKey, successUri, failUri);
                             ValidateResult(Result);
                         }
                         con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D FAIL page"));
                     }
                     catch (Exception exFail)
                     {
+                        FailMessage = exFail.ToString();
                         con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>", "Sales 3D INTERNAL ERROR FAIL page"));
                         throw;
                     }
@@ -491,8 +496,7 @@
                 //.OpenWebClient("/", false)
                 .OpenWebClient("/Sales3DTest")
                 ;
-
-            Assert.IsFalse(IsFail);
+            Assert.IsFalse(IsFail, FailMessage);
             //OpenWebUI(HTML, "Sales3DTest");
             //var _pay = new GarantiVPClient()
             //            .Test(true)
