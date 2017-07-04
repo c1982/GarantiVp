@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="GarantiVP.GVPSRequest">
+    <Position X="0.5" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>IAHAAAAAAIAABAAAAAAAAIAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestTransaction">
+    <Position X="2" Y="15.5" Width="5.75" />
+    <AssociationLine Name="Verification" Type="GarantiVP.GVPSRequestVerification" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="18.03" />
+        <Point X="8.125" Y="18.03" />
+        <Point X="8.125" Y="21.052" />
+        <Point X="9" Y="21.052" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="UtilityPaymentVoidInq" Type="GarantiVP.GVPSRequestUtilityPaymentVoidInq" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.955" />
+        <Point X="13.156" Y="17.955" />
+        <Point X="13.156" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="UtilityPaymentInq" Type="GarantiVP.GVPSRequestUtilityPaymentInq" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.879" />
+        <Point X="15.75" Y="17.879" />
+        <Point X="15.75" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="UtilityPayment" Type="GarantiVP.GVPSRequestUtilityPayment" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.803" />
+        <Point X="18.438" Y="17.803" />
+        <Point X="18.438" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Secure3D" Type="GarantiVP.GVPSRequestSecure3D" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.712" />
+        <Point X="21.188" Y="17.712" />
+        <Point X="21.188" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="RewardList" Type="GarantiVP.GVPSRequestRewardList" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.632" />
+        <Point X="24.25" Y="17.632" />
+        <Point X="24.25" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="MoneyCard" Type="GarantiVP.GVPSRequestMoneyCard" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.545" />
+        <Point X="29.5" Y="17.545" />
+        <Point X="29.5" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="GSMUnitSales" Type="GarantiVP.GVPSRequestGSMUnitSales" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.47" />
+        <Point X="31.875" Y="17.47" />
+        <Point X="31.875" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="GSMUnitInq" Type="GarantiVP.GVPSRequestGSMUnitInq" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.388" />
+        <Point X="34.625" Y="17.388" />
+        <Point X="34.625" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CommercialCardExtendedCredit" Type="GarantiVP.GVPSRequestCommercialCardExtendedCredit" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.295" />
+        <Point X="38.125" Y="17.295" />
+        <Point X="38.125" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ChequeList" Type="GarantiVP.GVPSRequestChequeList" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.188" />
+        <Point X="45.75" Y="17.188" />
+        <Point X="45.75" Y="20.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CepBankInq" Type="GarantiVP.GVPSRequestCepBankIng" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="17.063" />
+        <Point X="48.5" Y="17.063" />
+        <Point X="48.5" Y="20.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CepBank" Type="GarantiVP.GVPSRequestCepBank" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="16.938" />
+        <Point X="52" Y="16.938" />
+        <Point X="52" Y="20.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>BAAAIACAABRAAAAQARAEIAKAAAAAAgAAAQgAQoAQIAE=</HashCode>
+      <FileName>GVPSRequestTransaction.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Verification" />
+      <Property Name="UtilityPaymentVoidInq" />
+      <Property Name="UtilityPaymentInq" />
+      <Property Name="UtilityPayment" />
+      <Property Name="Secure3D" />
+      <Property Name="RewardList" />
+      <Property Name="MoneyCard" />
+      <Property Name="GSMUnitSales" />
+      <Property Name="GSMUnitInq" />
+      <Property Name="CommercialCardExtendedCredit" />
+      <Property Name="ChequeList" />
+      <Property Name="CepBankInq" />
+      <Property Name="CepBank" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestVerification">
+    <Position X="9" Y="20.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestVerification.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestUtilityPaymentVoidInq">
+    <Position X="11.5" Y="20.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestUtilityPaymentVoidInq.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestUtilityPaymentInq">
+    <Position X="14.5" Y="20.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestUtilityPaymentInq.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestTransactionInqBase">
+    <Position X="12" Y="24.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAI=</HashCode>
+      <FileName>GVPSRequestTransactionInqBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestUtilityPayment">
+    <Position X="17.25" Y="20.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestUtilityPayment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestSecure3D">
+    <Position X="19.75" Y="20.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>ACACAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAgAAAAAAA=</HashCode>
+      <FileName>GVPSRequestSecure3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestRewardList">
+    <Position X="22.75" Y="20.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>GVPSRequestRewardList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Reward" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequesReward">
+    <Position X="26.25" Y="21.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequesReward.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestMoneyCard">
+    <Position X="28.5" Y="20.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestMoneyCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestGSMUnitSales">
+    <Position X="30.75" Y="20.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>GVPSRequestGSMUnitSales.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestGSMUnitInq">
+    <Position X="33.5" Y="20.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>GVPSRequestGSMUnitInq.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCommercialCardExtendedCredit">
+    <Position X="36" Y="20.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>GVPSRequestCommercialCardExtendedCredit.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PaymentList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestTransactionPaymentList">
+    <Position X="40.75" Y="22" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestPaymentList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestPaymentListBase&lt;T&gt;">
+    <Position X="41.5" Y="27.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestPaymentList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestChequeList">
+    <Position X="44.75" Y="20.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestChequeList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCepBankIng">
+    <Position X="47.25" Y="20.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestCepBankIng.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCepBank">
+    <Position X="50.25" Y="20.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestCepBank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestTerminal">
+    <Position X="8.75" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgRAAAgAAAAAAAAAgAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>GVPSRequestTerminal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestOrder">
+    <Position X="15.25" Y="6.25" Width="3.75" />
+    <AssociationLine Name="Recurring" Type="GarantiVP.GVPSRequestRecurring" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19" Y="6.875" />
+        <Point X="22" Y="6.875" />
+        <Point X="22" Y="7.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ItemList" Type="GarantiVP.GVPSRequestItemList" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19" Y="6.688" />
+        <Point X="32.125" Y="6.688" />
+        <Point X="32.125" Y="7.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CommentList" Type="GarantiVP.GVPSRequestCommentList" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19" Y="6.5" />
+        <Point X="35.625" Y="6.5" />
+        <Point X="35.625" Y="7.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="AddressList" Type="GarantiVP.GVPSRequestAddressList" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19" Y="6.312" />
+        <Point X="39.25" Y="6.312" />
+        <Point X="39.25" Y="7.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQAQBAAAAAgAACAAAAAgAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>GVPSRequestOrder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Recurring" />
+      <Property Name="ItemList" />
+      <Property Name="CommentList" />
+      <Property Name="AddressList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestRecurring">
+    <Position X="20" Y="7.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAQQAEAFAAAAA=</HashCode>
+      <FileName>GVPSRequestRecurring.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PaymentList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestItemList">
+    <Position X="30.75" Y="7.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestItemList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Item" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestItem">
+    <Position X="30.25" Y="9.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAQAwAAAAAEAAAAAAAAAAAAAAAAAAgAAAIAA=</HashCode>
+      <FileName>GVPSRequestItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCommentList">
+    <Position X="34" Y="7.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestCommentList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Comment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestComment">
+    <Position X="34.5" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GVPSRequestComment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestAddressList">
+    <Position X="37.75" Y="7.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestAddressList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Address" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestAddress">
+    <Position X="41.75" Y="8.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAQAAAAAAAIIAAAQAQAAAIAIAAAAQAADAAAAAg=</HashCode>
+      <FileName>GVPSRequestAddress.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestReccuringPaymentList">
+    <Position X="25.75" Y="8.5" Width="3.75" />
+    <InheritanceLine Type="GarantiVP.GVPSRequestPaymentListBase&lt;T&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="42.625" Y="27.5" />
+        <Point X="42.625" Y="26.703" />
+        <Point X="1.127" Y="26.703" />
+        <Point X="1.127" Y="13.406" />
+        <Point X="27.625" Y="13.406" />
+        <Point X="27.625" Y="9.497" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestPaymentList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCard">
+    <Position X="6" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>GVPSRequestCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestCustomer">
+    <Position X="3.25" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgACAAA=</HashCode>
+      <FileName>GVPSRequestCustomer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GarantiVP.GVPSRequestSettlementInq">
+    <Position X="10" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GVPSRequestSettlementInq.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

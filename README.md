@@ -1,12 +1,26 @@
 GarantiVp
 =========
 
-Garanti Bankası Sanal Pos İstemcisi .Net Framework üzerinde C# kullanılarak geliştirilmştir. Garanti Bankasının yeni 
-sanal pos sistemine göre düzenlenmiştir. OOS_PAY ödeme tipi için düzenlenmiştir.
+Garanti Bankası Sanal Pos İstemcisi .Net Framework üzerinde C# kullanılarak geliştirilmştir. 
+Garanti Bankasının yeni sanal pos sistemine göre düzenlenmiştir. 
+OOS_PAY ödeme tipi için düzenlenmiştir.
+
+Aşağıdaki ödeme yöntemlerini de destekleyecek şekilde güncellenmeye çalışılmaktadır.<br/>
+XML_PAY (CCPay / XML / Normal)<br/>
+3D_PAY<br/>
+3D_FULL<br/>
 
 Oğuzhan<br/>
 oguzhan.info<br/>
-aspsrc@gmail.com
+aspsrc@gmail.com<br/>
+
+Engin MUTLU<br/>
+enginmutlu.com<br/>
+github.com{@}enginmutlu.com<br/>
+
+Teşekkür
+=========
+Yasin AVCI
 
 Kullanım
 =========
@@ -14,12 +28,13 @@ Kullanım
 Satış:
 ```C#
             var _pay = new Client()
-                         .Test().Company(terminalId, merchandId, "PROVAUT", Password)
-                                            .Customer("apsrc@gmail.com", "192.168.0.1")
-                                            .CreditCard("1145213658974525", "555", 5, 2015)
-                                            .Order(Guid.NewGuid().ToString("N"))
-                                            .Amount(100, CurrencyCode.TRL)
-                                            .Sales();
+                                    .Test(true)
+                                    .Company(terminalId, merchandId, "PROVAUT", Password)
+                                    .Customer("apsrc@gmail.com", "192.168.0.1")
+                                    .CreditCard("1145213658974525", "555", 5, 2015)
+                                    .Order(Guid.NewGuid().ToString("N"))
+                                    .Amount(100, CurrencyCode.TRL)
+                                    .Sales();
 
             Assert.AreEqual("00", _pay.Transaction.Response.Code);
             Assert.AreEqual("Approved", _pay.Transaction.Response.Message);
@@ -28,21 +43,22 @@ Satış:
 
 Taksitli Satış:
 ```C#
-            var _pay = new Client().Test()
-                            .Company(terminalId, merchandId, "PROVAUT", Password)
-                                .Customer("apsrc@gmail.com", "192.168.0.1")
-                                .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
-                                .Order(Guid.NewGuid().ToString("N"))
-                                .Amount(95)
-                                .Installment(2)
-                                .Sales();
+            var _pay = new Client()
+                                    .Test(true)
+                                    .Company(terminalId, merchandId, "PROVAUT", Password)
+                                    .Customer("apsrc@gmail.com", "192.168.0.1")
+                                    .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
+                                    .Order(Guid.NewGuid().ToString("N"))
+                                    .Amount(95)
+                                    .Installment(2)
+                                    .Sales();
                                 
 ```
 
 İptal:
 ```C#
             var _pay = new Client()
-                                    .Test()
+                                    .Test(true)
                                     .Company(terminalId, merchandId, "PROVRFN", Password)
                                     .Customer("apsrc@gmail.com", "192.168.0.1")
                                     .Order(orderId)
@@ -53,7 +69,7 @@ Taksitli Satış:
 İade:
 ```C#
             var _pay = new Client()
-                                    .Test()
+                                    .Test(true)
                                     .Company(terminalId, merchandId, "PROVAUT", Password)
                                     .Customer("apsrc@gmail.com", "192.168.0.1")
                                     .Order("405014619754")
@@ -124,10 +140,11 @@ https://sanalposprovtest.garanti.com.tr/servlet/gt3dengine<br/>
 <br/>
 Mağazalar dışarıdan erişirken gelecekleri ip ler:
 
-*194.29.209.225* (raporlama sayfaları)<br/>
-*194.29.209.226* (provizyon)<br/>
+Aşağıdaki host yapılandırmasına artık gerek yok DNS çözüyor.<br/>
+~~*194.29.209.225* (raporlama sayfaları)~~<br/>
+~~*194.29.209.226* (provizyon)~~<br/>
 
-hosts dosyasına Provizyon denemeleri sırasında *194.29.209.226 sanalposprovtest.garanti.com.tr*
+~~hosts dosyasına Provizyon denemeleri sırasında *194.29.209.226 sanalposprovtest.garanti.com.tr*~~
  
-Raporlar ekranı testleri sırasında *194.29.209.225  sanalposwebtest.garanti.com.tr* yazılması gerekiyor.
+~~Raporlar ekranı testleri sırasında *194.29.209.225  sanalposwebtest.garanti.com.tr* yazılması gerekiyor.~~
 
