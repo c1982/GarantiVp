@@ -7,6 +7,7 @@
     using Microsoft.Owin;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     [TestClass]
     public class VPTests
@@ -39,10 +40,10 @@
         private const string HostUriFailPath = "/fail";
 
         //Credit card details
-        private const string credit_card_number = "4824894728063019";
-        private const string credit_card_cvv2 = "959";
-        private const int credit_card_month = 6;
-        private const int credit_card_year = 17;
+        private const string credit_card_number = "4282209027132016";
+        private const string credit_card_cvv2 = "358";
+        private const int credit_card_month = 5;
+        private const int credit_card_year = 18;
 
         //Credit card details for 3D
         private const string credit_card_number_for_3D = "4282209004348015";
@@ -414,7 +415,7 @@
         [TestMethod]
         public void Sale3DTest()
         {
-            var IsFail = false;
+            var IsFail = true;
             string FailMessage = null;
             var VPClient = new GVPSClient();
             Uri successUri = new Uri(HostUri, HostUriSuccessPath);
@@ -423,73 +424,63 @@
                         .Test(true)
                         .Company(TerminalID_For_3D_FULL, MerchandID, ProvUserID_3DS, ProvUserPassword, SubMerchandID)
                         .Customer(customer_email, customer_ipAddress)
-                        .CreditCard(credit_card_number, credit_card_cvv2, credit_card_month, credit_card_year)
-                        .Order(Guid.NewGuid().ToString("N"))
-                        .Amount(1234.567, GVPSCurrencyCodeEnum.TRL)
+                        .CreditCard(credit_card_number_for_3D, credit_card_cvv2_for_3D, credit_card_month_for_3D, credit_card_year_for_3D)
+                        .Order("OID" + DateTime.Now.Ticks.ToString())
+                        //.AddOrderAddress(GVPSAddressTypeEnum.Billing, order_address_city, order_address_district, order_address_text, order_address_phone, null, null, order_address_name, order_address_postalCode)
+                        //.AddOrderAddress(GVPSAddressTypeEnum.Shipping, order_address_city, order_address_district, order_address_text, order_address_phone, null, null, order_address_name, order_address_postalCode)
+                        //.AddOrderItem(1, "0001", "ProductA ğüşiöçĞÜŞİÖÇ", 1.456, 3.456, "product A ğüşiöçĞÜŞİÖÇ description")
+                        //.AddOrderItem(2, "0002", "ProductB", 1.4, 1.1, "product B description")
+                        //.AddOrderComment(1, "COM1 ğüşiöçĞÜŞİÖÇ")
+                        .Amount(95, GVPSCurrencyCodeEnum.TRL)
                         .Sale3DRequest(SecureKey, successUri, failUri);
             Request.AddInput("", "Gönder", "submit");
             var HTML = Request.OuterXml;
+            Debug.WriteLine("Secure 3D Form: " + HTML);
             var i = SelfHost.Run(HostUri.ToString())
                 .Listen("/Sales3DTest", (IOwinContext con) => {
+                    Debug.WriteLine("REQUEST Sales3DTest");
                     con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
+                    string strRegex = @"<input type=""hidden"" name=""(\w*)"" value=""([\w|\.|\:|\/|\@]*)"" />";
+                    string strReplace = "\n" + @"<div class=""row"">" + "\n" + @"<div class=""col-md-2"">$1</div>" + "\n" + @"<div class=""col-md-2"">$2</div>" + "\n" + @"</div>" + "\n";
+                    Regex myRegex = new Regex(strRegex, RegexOptions.None);
+                    HTML = myRegex.Replace(HTML, strReplace).Replace(@"<input type=""submit"" name="""" value=""Gönder"" />", "").Replace("<form", "<div").Replace("</form>", "</div>") + HTML;
                     con.Response.Write(SelfHost.CreateWebContent(HTML, "Sales 3D test page"));
                 })
                 .Listen(HostUriSuccessPath, async (IOwinContext con) =>
                 {
+                    Debug.WriteLine("REQUEST " + HostUriSuccessPath);
                     con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
                     var ResponseHTML = "";
                     try
                     {
                         var formData = await con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>;
-                        var formDataDic = formData.ToDictionary(k => k.Key, e => e.Value);
-                        ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
-                        foreach (var item in con.Request.Headers)
-                        {
-                            ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
-                        }
-                        if (con.Request.Method == "POST")
-                        {
-                            ResponseHTML += SelfHost.CreateWebContent(formDataDic);
-                            var Result = VPClient.Sales3DEvaluatesResponseAndGetProvision(formDataDic, SecureKey, successUri, failUri);
-                            ValidateResult(Result);
-                        }
+                        ValidateResultFunction(con, formData, ref ResponseHTML, ref VPClient, successUri, failUri);
                         con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D SUCCESS page"));
-
+                        IsFail = false;
                     }
                     catch (Exception exSuccess)
                     {
                         IsFail = true;
                         FailMessage = exSuccess.ToString();
-                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exSuccess.ToString() + "</pre>", "Sales 3D INTERNAL ERROR SUCCESS page"));
+                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exSuccess.ToString() + "</pre>" + ResponseHTML, "Sales 3D INTERNAL ERROR SUCCESS page"));
                         throw;
                     }
                 })
                 .Listen(HostUriFailPath, async (IOwinContext con) =>
                 {
+                    Debug.WriteLine("REQUEST " + HostUriFailPath);
                     IsFail = true;
                     var ResponseHTML = "";
                     try
                     {
                         var formData = (await con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>);
-                        var formDataDic = formData.ToDictionary(k => k.Key, e => e.Value);
-                        con.Response.Expires = DateTimeOffset.Now.AddDays(-1);
-                        ResponseHTML += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
-                        foreach (var item in con.Request.Headers)
-                        {
-                            ResponseHTML += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", string.Join("\n", item.Value))).Replace("\n", "</br>"));
-                        }
-                        if (con.Request.Method == "POST")
-                        {
-                            ResponseHTML += SelfHost.CreateWebContent(formDataDic);
-                            var Result = VPClient.Sales3DEvaluatesResponseAndGetProvision(formDataDic, SecureKey, successUri, failUri);
-                            ValidateResult(Result);
-                        }
+                        ValidateResultFunction(con, formData, ref ResponseHTML, ref VPClient, successUri, failUri);
                         con.Response.Write(SelfHost.CreateWebContent(ResponseHTML, "Sales 3D FAIL page"));
                     }
                     catch (Exception exFail)
                     {
                         FailMessage = exFail.ToString();
-                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>", "Sales 3D INTERNAL ERROR FAIL page"));
+                        con.Response.Write(SelfHost.CreateWebContent("<pre>" + exFail.ToString() + "</pre>" + ResponseHTML, "Sales 3D INTERNAL ERROR FAIL page"));
                         throw;
                     }
                 })
@@ -504,6 +495,26 @@
             //ValidateResult(_pay);
             //OrderIdForCancel = _pay.Order.OrderID;
             //OrderRefNumberForCancel = _pay.Transaction.RetrefNum;
+        }
+
+        private void ValidateResultFunction(IOwinContext con, IEnumerable<KeyValuePair<string, string[]>> formData, ref string ret, ref GVPSClient VPClient, Uri successUri, Uri failUri)
+        {
+            //string ret = "";
+            //var formData = con.Request.ReadFormAsync() as IEnumerable<KeyValuePair<string, string[]>>;
+            var formDataDic = formData.ToDictionary(k => k.Key, e => e.Value);
+            ret += string.Format("\n</br><strong>Method</strong>\n</br>{0}", con.Request.Method);
+            Debug.WriteLine("INCOMING HEADERS");
+            foreach (var item in con.Request.Headers)
+            {
+                Debug.WriteLine(string.Format("{0}={1}", item.Key, item.Value.FirstOrDefault()));
+                ret += string.Format("\n</br><strong>Header {0}</strong> : {1}", item.Key, System.Net.WebUtility.HtmlEncode(string.Format("{0}", item.Value)));
+            }
+            if (con.Request.Method == "POST")
+            {
+                ret += SelfHost.CreateWebContent(formDataDic);
+                var Result = VPClient.Sales3DEvaluatesResponseAndGetProvision(formDataDic, SecureKey, successUri, failUri);
+                ValidateResult(Result);
+            }
         }
 
         public string OpenWebUI(string HTMLContent, string PageTitle = "Local test content")

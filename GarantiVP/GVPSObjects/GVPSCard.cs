@@ -16,6 +16,7 @@ namespace GarantiVP
         /// <para lang="tr">Kart numarası</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("cardnumber")]
         public string Number { get; set; }
 
         /// <summary>
@@ -24,6 +25,7 @@ namespace GarantiVP
         /// <para lang="tr">Kart son kullanım tarihi. AAYY biçiminde olmalı.</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("cardexpiredatemonth", "cardexpiredateyear")]
         public string ExpireDate { get; set; }
 
         /// <summary>
@@ -32,6 +34,7 @@ namespace GarantiVP
         /// <para lang="tr">Kart CVV numarası</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("cardcvv2")]
         public string CVV2 { get; set; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace GarantiVP
         /// <para lang="tr">Kart sahibi adı</para> 
         /// </summary>
         [XmlElement()]
+        [FormElement("cardholder")]
         public string CardHolder { get; set; }
     }
 }

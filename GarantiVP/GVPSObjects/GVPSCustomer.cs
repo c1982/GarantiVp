@@ -15,6 +15,7 @@ namespace GarantiVP
         /// <para lang="tr">Müşteri IP Adresi</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("customeripaddress")]
         public string IPAddress { get; set; }
 
         /// <summary>
@@ -23,6 +24,7 @@ namespace GarantiVP
         /// <para lang="tr">Müşteri e-posta adresi</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("customeremailaddress")]
         public string EmailAddress { get; set; }
     }
 }

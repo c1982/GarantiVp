@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,6 +10,15 @@ namespace GarantiVP
 {
     public static class GVPSHelpers
     {
+        public static string Get(this IDictionary<string, string[]> dic, string key)
+        {
+            string ret = null;
+            if (dic == null)
+                throw new ArgumentNullException("dic");
+            if (dic.ContainsKey(key))
+                ret = dic[key].FirstOrDefault();
+            return ret;
+        }
         public static XmlElement AddInput(this XmlElement xe, string name, string val, string type = "hidden")
         {
             var xeNew = xe.OwnerDocument.CreateElement("input");

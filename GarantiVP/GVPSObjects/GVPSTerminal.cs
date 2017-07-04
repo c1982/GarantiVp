@@ -19,6 +19,7 @@ namespace GarantiVP
         /// </value>
         /// </summary>
         [XmlElement]
+        [FormElement("terminalprovuserid")]
         public string ProvUserID { get; set; }
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace GarantiVP
         /// <para lang="tr">Çağrı Merkezi ve benzeri kanallarda, satış işlemini gerçekleştiren satış elemanının kodu bu alanda yazılmıştır.</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("terminaluserid")]
         public string UserID { get; set; }
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace GarantiVP
         /// <para lang="tr">Terminal referansı</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("terminalid")]
         public string ID { get; set; }
 
         /// <summary>
@@ -52,6 +55,7 @@ namespace GarantiVP
         /// <para lang="tr">Satıcı referansı</para>
         /// </summary>
         [XmlElement]
+        [FormElement("terminalmerchantid")]
         public string MerchantID { get; set; }
 
         /// <summary>

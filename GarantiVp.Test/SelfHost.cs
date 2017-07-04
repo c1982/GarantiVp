@@ -184,8 +184,10 @@ namespace GarantiVp.Test
             var ret = "";
             if (formDataDic == null)
                 throw new ArgumentNullException("formData");
+            Debug.WriteLine("INCOMING POSTED DATA");
             foreach (var item in formDataDic)
             {
+                Debug.WriteLine("{0}={1}", item.Key, item.Value.FirstOrDefault());
                 ret += "\n<div class=\"row\">";
                 ret += "\n<div class=\"col-md-2\">";
                 ret += System.Net.WebUtility.HtmlEncode(item.Key);

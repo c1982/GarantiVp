@@ -14,6 +14,7 @@ namespace GarantiVP
         /// <para>Size numeric 2 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemnumber")]
         public uint Number { get; set; }
 
         /// <summary>
@@ -21,6 +22,7 @@ namespace GarantiVP
         /// <para>Size alfanumeric 40 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemproductid")]
         public string ProductID { get; set; }
 
         /// <summary>
@@ -28,6 +30,7 @@ namespace GarantiVP
         /// <para>Size alfanumeric 12 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemproductcode")]
         public string ProductCode { get; set; }
 
         /// <summary>
@@ -35,6 +38,7 @@ namespace GarantiVP
         /// <para>Size 13 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemquantity")]
         public ulong Quantity { get; set; }
 
         /// <summary>
@@ -43,6 +47,7 @@ namespace GarantiVP
         /// <para>Size numeric 19 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemprice")]
         public ulong Price { get; set; }
 
         /// <summary>
@@ -51,6 +56,7 @@ namespace GarantiVP
         /// <para>Size numeric 19 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemtotalamount")]
         public ulong TotalAmount { get; set; }
 
         /// <summary>
@@ -58,6 +64,7 @@ namespace GarantiVP
         /// <para>Size 20 Byte</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemdescription")]
         public string Description { get; set; }
     }
 }

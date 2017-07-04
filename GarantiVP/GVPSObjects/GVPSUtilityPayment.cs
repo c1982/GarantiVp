@@ -15,6 +15,7 @@ namespace GarantiVP
         /// <para lang="tr">Fatura numarası</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("utilitypayinvoiceid")]
         public string InvoiceID { get; set; }
 
         /// <summary>
