@@ -194,6 +194,6 @@ namespace GarantiVP
         /// 3D Secure destekli satış
         /// </summary>
         /// <returns></returns>
-        XmlElement Sale3DRequest(string StoreKeyFor3D, Uri SuccessUri, Uri FailUri);
+        XmlElement Sale3DRequest(string StoreKeyFor3D, Uri SuccessUri, Uri FailUri, ushort RefreshTime = 0, string Lang = "tr");
     }
 }
