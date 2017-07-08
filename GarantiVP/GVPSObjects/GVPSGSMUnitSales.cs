@@ -14,6 +14,7 @@ namespace GarantiVP
         /// <para lang="tr">Kontör numarası</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("gsmsalesunitid")]
         public string UnitID { get; set; }
 
         /// <summary>
@@ -23,6 +24,7 @@ namespace GarantiVP
         /// <para lang="tr">Tutar</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("gsmsalesamnt")]
         public ulong Amount { get; set; }
     }
 }

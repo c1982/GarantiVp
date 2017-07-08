@@ -33,6 +33,7 @@
         /// <para lang="tr">İşlem modu</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("mode")]
         public GVPSRequestModeEnum Mode { get; set; }
 
         /// <summary>
@@ -41,6 +42,7 @@
         /// <para lang="tr">Kullanılan api sürümü</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("apiversion")]
         public string Version { get; set; }
 
         /// <summary>

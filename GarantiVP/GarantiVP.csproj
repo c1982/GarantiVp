@@ -40,11 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GVPSClient.cs" />
+    <Compile Include="GVPSExcetion.cs" />
     <Compile Include="GVPSHelpers.cs" />
     <Compile Include="GVPSEnums\GVPSAddressTypeEnum.cs" />
     <Compile Include="GVPSEnums\GVPSFrequencyTypeEnum.cs" />
     <Compile Include="GVPSEnums\GVPSPaymentTypeEnum.cs" />
     <Compile Include="GVPSEnums\GVPSRecurringTypeEnum.cs" />
+    <Compile Include="GVPSObjects\FormElementAttribute.cs" />
     <Compile Include="GVPSObjects\GVPSHostMsgList.cs" />
     <Compile Include="GVPSEnums\GVPSMdStatusEnum.cs" />
     <Compile Include="GVPSObjects\GVPSRequest.cs" />

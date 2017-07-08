@@ -23,6 +23,8 @@ namespace GarantiVP
         /// <para>Size ? Byte alfanumeric</para>
         /// <para lang="tr">Abone / tesisat numarası</para> 
         /// </summary>
+        [XmlElement]
+        [FormElement("utilitypaysubscode")]
         public string SubscriberCode { get; set; }
     }
 }

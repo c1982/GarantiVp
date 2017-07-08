@@ -13,6 +13,7 @@ namespace GarantiVP
         /// <para>Size alfanumeric 1 Byte</para>
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresstype")]
         public GVPSAddressTypeEnum Type { get; set; }
 
         /// <summary>
@@ -29,6 +30,7 @@ namespace GarantiVP
         /// <para lang="tr">Alıcı soyadı</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresslastname")]
         public string LastName { get; set; }
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace GarantiVP
         /// <para lang="tr">Firma bilgileri</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresscompany")]
         public string Company { get; set; }
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace GarantiVP
         /// <para lang="tr">Adres metini</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresstext")]
         public string Text { get; set; }
 
         /// <summary>
@@ -53,6 +57,7 @@ namespace GarantiVP
         /// <para lang="tr">Semt adı</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddressdistrict")]
         public string District { get; set; }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace GarantiVP
         /// <para lang="tr">Şehir adı</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresscity")]
         public string City { get; set; }
 
         /// <summary>
@@ -69,6 +75,7 @@ namespace GarantiVP
         /// <para lang="tr">Posta kodu</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresspostalcode")]
         public string PostalCode { get; set; }
 
         /// <summary>
@@ -77,6 +84,7 @@ namespace GarantiVP
         /// <para lang="tr">Telefon numarası</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddressphonenumber")]
         public string PhoneNumber { get; set; }
 
         /// <summary>
@@ -85,6 +93,7 @@ namespace GarantiVP
         /// <para lang="tr">Cep telefonu numarası</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddressgsmnumber")]
         public string GSMNumber { get; set; }
 
         /// <summary>
@@ -93,6 +102,7 @@ namespace GarantiVP
         /// <para lang="tr">Faks numarası</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddressfaxnumber")]
         public string FaxNumber { get; set; }
 
         /// <summary>
@@ -101,6 +111,7 @@ namespace GarantiVP
         /// <para lang="tr">Ülke</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresscountry")]
         public string Country { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace GarantiVP
         /// <para lang="tr">İşlem tipi</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txntype")]
         public GVPSTransactionTypeEnum Type { get; set; }
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace GarantiVP
         /// <para lang="tr">Taksit Sayısı. Eğer boş gönderilirse, taksit yapılamaz.</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txninstallmentcount")]
         public string InstallmentCnt { get; set; }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace GarantiVP
         /// <para lang="tr">Tutar</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txnamount")]
         public ulong Amount { get; set; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace GarantiVP
         /// <para lang="tr">Para birimi kodu</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txncurrencycode")]
         public GVPSCurrencyCodeEnum CurrencyCode { get; set; }
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace GarantiVP
         /// <para lang="tr">Ötelenmiş gün sayısı</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("txndelaydaycnt")]
         public string DelayDayCount { get; set; }
 
         /// <summary>
@@ -63,6 +68,7 @@ namespace GarantiVP
         /// <para lang="tr">Peşinat payı / oranı</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("txndownpayrate")]
         public string DownPaymentRate { get; set; }
 
 
@@ -72,6 +78,7 @@ namespace GarantiVP
         /// <para lang="tr">Normal işlemler için değer 0'dır. 3D güvenli işlemler için değer 13'tür.</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txncardholderpresentcode")]
         public GVPSCardholderPresentCodeEnum CardholderPresentCode { get; set; }
 
         /// <summary>
@@ -80,6 +87,7 @@ namespace GarantiVP
         /// <para lang="tr">E-ticaret operasyonları için değer N'dir. Moto işlemleri için değer Y'dir.</para> 
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("txnmotoind")]
         public GVPSMotoIndEnum MotoInd { get; set; }
 
         /// <summary>

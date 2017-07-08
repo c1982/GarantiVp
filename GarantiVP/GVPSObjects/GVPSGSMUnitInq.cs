@@ -16,6 +16,7 @@ namespace GarantiVP
         /// <para lang="tr">Paket ID, tutar ve benzeri gibi bilgileri içerir.</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("gsmquantity")]
         public string Quantity { get; set; }
     }
 }

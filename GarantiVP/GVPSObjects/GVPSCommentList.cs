@@ -14,6 +14,7 @@ namespace GarantiVP
         /// 
         /// </summary>
         [XmlElement("Comment", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderaddresscount")]
         public GVPSComment[] Comment { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace GarantiVP
         /// 
         /// </summary>
         [XmlElement("Item", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderitemcount")]
         public GVPSItem[] Item { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace GarantiVP
         /// <para>Size 36 Byte</para>
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("orderid")]
         public string OrderID { get; set; }
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace GarantiVP
         /// <para>Size 36 Byte</para>
         /// </summary>
         [XmlElement(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [FormElement("ordergroupid")]
         public string GroupID { get; set; }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace GarantiVP
         /// <para lang="tr">Açıklama</para> 
         /// </summary>
         [XmlElement]
+        [FormElement("orderdescription")]
         public string Description { get; set; }
 
         //TODO Create property StartDate
