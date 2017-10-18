@@ -22,8 +22,6 @@ Teşekkür
 =========
 Yasin AVCI
 
-change for Gogs
-
 Kullanım
 =========
 
