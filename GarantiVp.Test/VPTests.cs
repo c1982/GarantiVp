@@ -32,7 +32,7 @@
         private const string ProvUserID_FRN = "PROVRFN";
         private const string ProvUserID_OOS = "PROVOOS";
         private const string ProvUserID_3DS = "GARANTI";
-        private const string ProvUserPassword = "123qweASD";
+        private const string ProvUserPassword = "123qweASD"; //Alternatif "123qweASD/"
 
         //3D Secure configs
         private Uri HostUri = new Uri("http://localhost:5000");
